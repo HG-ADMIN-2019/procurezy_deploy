@@ -11,7 +11,7 @@ autobahn==20.12.3
 Automat==20.2.0
 automium==0.2.6
 automium-web==0.1.1
-cachetools==5.2.0
+cachetools==4.2.4
 camelot-py==0.11.0
 certifi==2022.5.18.1
 cffi==1.15.0
