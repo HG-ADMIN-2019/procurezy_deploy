@@ -443,17 +443,23 @@ class ApplicationSettingsSave:
         return data
 
     def generate_aac_delete_flags(self, aac_data):
-        delete_flags = []  # List to store delete_flag for each value
+        delete_flags = []
+        field_name_mapping = {
+            AccountingData: 'account_assign_cat',
+            AccountingDataDesc: 'account_assign_cat',
+            DetermineGLAccount: 'account_assign_cat',
+            OrgAttributesLevel: 'low',
+        }
 
         for aac_detail in aac_data['data']:
             delete_flag = True
 
             # Tables to check for existence
-            tables_to_check = [AccountingData, AccountingDataDesc, DetermineGLAccount]
-
+            tables_to_check = [AccountingData, AccountingDataDesc, DetermineGLAccount, OrgAttributesLevel]
             for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'account_assign_cat')
                 if django_query_instance.django_existence_check(table_name,
-                                                                {'account_assign_cat': aac_detail['account_assign_cat'],
+                                                                {field_name: aac_detail['account_assign_cat'],
                                                                  'client': self.client,
                                                                  'del_ind': False}):
                     delete_flag = False
