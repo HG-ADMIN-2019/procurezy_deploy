@@ -180,13 +180,6 @@
     var hiddenCompanyIDs = [];
     var hiddenCallOffValue = [];
 
-<!--    var call_off_dropdown = `-->
-<!--        <option value='01'>Catalog</option>-->
-<!--        <option value='02'>Free text</option>-->
-<!--        <option value='03'>PR</option>-->
-<!--        <option value='04'>Limit</option>-->
-<!--    `;-->
-
     function dropdown() {
         pc_company_dropdown = '';
         $.each(rendered_pc_company_data, function (i, item) {
@@ -209,20 +202,18 @@
          });
     }
 
+    var available_company_data = [];
     function on_page_load_dropdown() {
         var hiddenProd_catIDs = [];
-        hide_company_values();
+        hide_company_values(); // function call to filter company values
 
-        pc_company_dropdown='';
-        var Not_used = false;
-        for(i = 0; i < rendered_pc_company_data.length; i++) {
-            var item = rendered_pc_company_data[i];
-            var company_code = item.company_id
-            var callOffValues = main_table_data[company_code];
-
-            if (!callOffValues) {
-                $.each(rendered_pc_company_data, function (i, item) {
-                    pc_company_dropdown += '<option value="' + item.company_id + '">' + item.company_id + '</option>'
+        if (available_company_data.length > 0) {
+            var company_value = available_company_data[0];
+            var call_of_val = main_table_data[company_value];
+            if (!call_of_val) {
+                pc_company_dropdown = '';
+                $.each(available_company_data, function (i, item) {
+                    pc_company_dropdown += '<option value="' + item + '">' + item + '</option>'
                 });
 
                 call_off_dropdown = '';
@@ -236,38 +227,19 @@
                 });
 
                 activate_dropdown = '';
-                 $.each(rendered_activate, function(i, item){
+                $.each(rendered_activate, function(i, item){
                     activate_dropdown += '<option value="' + item.field_type_id + '">' + item.field_type_id + '</option>';
-                 });
-<!--                 Not_used = true;-->
-<!--                 break;-->
+                });
                 return;
-            }else if (!hiddenCompanyIDs.includes(company_code)) {
-                if (areAllValuesUsed(company_code)) {
-                    if (rendered_call_off.length === hiddenCallOffValue.length) {
-                        hiddenCompanyIDs.push(company_code)
-                        Not_used = true;
-                        continue;
-                    }
-                    for (var j = 0; j < rendered_pc_company_data.length; j++) {
-                        var company_code = rendered_pc_company_data[j].company_id;
-                         if (hiddenCompanyIDs.indexOf(company_code) === -1) {
-                            pc_company_dropdown += '<option value="' + company_code + '">' + company_code + '</option>';
-                         }
-                    }
-                }
-                Not_used = true;
-                break;
-            }
-            $.each(hiddenCompanyIDs, function (i, hiddenCompanyIDs) {
-                pc_company_dropdown = pc_company_dropdown.replace(new RegExp('<option value="' + hiddenCompanyIDs + '">.*<\/option>'), '');
-            });
+            } else {
+                pc_company_dropdown = '';
+                $.each(available_company_data, function (i, item) {
+                    pc_company_dropdown += '<option value="' + item + '">' + item + '</option>'
+                });
 
-            // Function to check if all callOff and prodCatID value for a specific company are used in the main table
-            function areAllValuesUsed(company_code) {
                 main_table_callOffValues = {};
                 var callOff
-                callOffValues.forEach(item => {
+                call_of_val.forEach(item => {
                     callOff = item.call_off; // Assuming this property holds the auth_level
                     if (!main_table_callOffValues[callOff]) {
                         main_table_callOffValues[callOff] = new Set();
@@ -287,10 +259,6 @@
                     }
                 }
 
-                if (call_off_dropdown === '') {
-                   return true; // Exit the function
-                }
-
                 prod_cat_dropdown = '';
                 hiddenProd_catIDs = [];
                 var callOffValuesArray = call_off_dropdown.match(/value="([^"]+)"/g).map(function(match) {
@@ -303,7 +271,6 @@
                             var prod_cat_id = item.prod_cat_id;
                             prod_cat_dropdown += '<option value="' + prod_cat_id + '">' + prod_cat_id + '</option>';
                         });
-                        Not_used = true;
                         break;
                     } else {
                         var assignedProdCatIDs = Array.from(main_table_callOffValues[callOffValue]);
@@ -315,26 +282,27 @@
                                 hiddenProd_catIDs.push(prod_cat_id);
                             }
                         });
-                        Not_used = true;
-                        break;
                     }
+                    break;
                 }
 
                 activate_dropdown = '';
                 $.each(rendered_activate, function(i, item){
-                  activate_dropdown += '<option value="' + item.field_type_id + '">' + item.field_type_id + '</option>';
+                    activate_dropdown += '<option value="' + item.field_type_id + '">' + item.field_type_id + '</option>';
                 });
-                return true;
             }
         }
     }
 
     function hide_company_values() {
+        available_company_data = [];
+        hidden_company_value = [];
         for(i = 0; i < rendered_pc_company_data.length; i++) {
             var item = rendered_pc_company_data[i];
             var company_code = item.company_id
             var callOffValues = main_table_data[company_code];
-            if (!callOffValues) {
+            if (callOffValues === undefined) {
+                available_company_data.push(company_code);
                 continue;
             }
 
@@ -357,7 +325,9 @@
             }
 
             if(rendered_call_off.length==hiddenCallOffValue.length){
-                hiddenCompanyIDs.push(company_code)
+                hidden_company_value.push(company_code)
+            }else {
+                available_company_data.push(company_code);
             }
         }
     }
@@ -376,7 +346,6 @@
                 rendered_activate = response.dropdown_activate
                 display_tb_data(); // Read data from main table
                 on_page_load_dropdown();
-<!--                dropdown();-->
                 $("#error_msg_id").css("display", "none")
                 $("#header_select").prop("hidden", false);
                 GLOBAL_ACTION = button.value

@@ -553,18 +553,23 @@ class ApplicationSettingsSave:
         return data
 
     def generate_company_delete_flags(self, company_data):
-        delete_flags = []  # List to store delete_flag for each value
+        delete_flags = []
+        field_name_mapping = {
+            AccountingData: 'company_id', AccountingDataDesc: 'company_id', DetermineGLAccount: 'company_id',
+            WorkflowSchema: 'company_id', SpendLimitValue: 'company_id', SpendLimitId: 'company_id',
+            ApproverLimitValue: 'company_id', ApproverLimit: 'company_id', WorkflowACC: 'company_id',
+            OrgAddressMap: 'company_id', OrgAttributesLevel: 'low',
+        }
 
         for company_detail in company_data['data']:
             delete_flag = True
-
-            # Tables to check for existence
             tables_to_check = [AccountingData, AccountingDataDesc, DetermineGLAccount, WorkflowSchema, SpendLimitValue,
-                               SpendLimitId, ApproverLimitValue, ApproverLimit, WorkflowACC, OrgAddressMap]
-
+                               SpendLimitId, ApproverLimitValue, ApproverLimit, WorkflowACC, OrgAddressMap,
+                               OrgAttributesLevel]
             for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'company_id')
                 if django_query_instance.django_existence_check(table_name,
-                                                                {'company_id': company_detail['company_id'],
+                                                                {field_name: company_detail['company_id'],
                                                                  'client': self.client,
                                                                  'del_ind': False}):
                     delete_flag = False
