@@ -18,12 +18,16 @@ Usage:
 Author:
     Deepika K
 """
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.shortcuts import render
 
 from eProc_Attributes.Utilities.attributes_generic import OrgAttributeValues
 from eProc_Attributes.models.org_attribute_models import OrgAttributesLevel
 from eProc_Basic.Utilities.functions.django_query_set import DjangoQueries
 from eProc_Basic.Utilities.global_defination import global_variables
+from eProc_Basic.Utilities.messages import messages
+from eProc_Basic.Utilities.messages.messages import *
 from eProc_Configuration.models import UnspscCategoriesCustDesc, OrgCompanies, \
     OrgPorg, OrgPGroup, SupplierMaster
 from eProc_Configuration.models.development_data import OrgNodeTypes
@@ -236,7 +240,7 @@ def get_prod_cat_desc_count(unique_unspsc_list):
     return unspsc_info
 
 
-def get_supp_desc_count(supp_count):
+def get_supp_desc_count(supp_count, req):
     """
 
     :param supp_count:
@@ -246,13 +250,16 @@ def get_supp_desc_count(supp_count):
     for key, val in supp_count.items():
         supp_detail = {}
 
-        supp_detail['supplier'] = django_query_instance.django_filter_value_list_query(SupplierMaster, {
-            'client': global_variables.GLOBAL_CLIENT, 'del_ind': False, 'supplier_id': key
-        }, 'name1')[0]
+        try:
+            supp_detail['supplier'] = django_query_instance.django_filter_value_list_query(SupplierMaster, {
+                'client': global_variables.GLOBAL_CLIENT, 'del_ind': False, 'supplier_id': key
+            }, 'name1')[0]
 
-        supp_detail['supplier_id'] = key
-        supp_detail['supp_count'] = val
-        supp_info.append(supp_detail)
+            supp_detail['supplier_id'] = key
+            supp_detail['supp_count'] = val
+            supp_info.append(supp_detail)
+        except Exception as e:
+            print(e)
     return supp_info
 
 
