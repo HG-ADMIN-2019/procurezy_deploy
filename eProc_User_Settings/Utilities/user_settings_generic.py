@@ -240,7 +240,7 @@ def get_prod_cat_desc_count(unique_unspsc_list):
     return unspsc_info
 
 
-def get_supp_desc_count(supp_count, req):
+def get_supp_desc_count(supp_count):
     """
 
     :param supp_count:
