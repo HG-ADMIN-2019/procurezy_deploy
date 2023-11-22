@@ -382,23 +382,28 @@ class ApplicationSettingsSave:
         return data
 
     def generate_roles_delete_flags(self, roles_data):
-        delete_flags = []  # List to store delete_flag for each value
+        delete_flags = []
+        field_name_mapping = {
+            Authorization: 'role',
+            OrgAttributesLevel: 'low',
+        }
 
         for roles_detail in roles_data['data']:
             delete_flag = True
+            tables_to_check = [Authorization, OrgAttributesLevel]
+            for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'role')
+                if django_query_instance.django_existence_check(table_name,
+                                                                {field_name: roles_detail['role'],
+                                                                 'client': self.client,
+                                                                 'del_ind': False}):
+                    delete_flag = False
+                    break
 
-            # Check if value is present in the transaction table
-            if django_query_instance.django_existence_check(Authorization,
-                                                            {'role': roles_detail['role'],
-                                                             'client': self.client,
-                                                             'del_ind': False}):
-                delete_flag = False
-            delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
-
-            data = {
-                'delete_flags': delete_flags
-            }
-
+            delete_flags.append(delete_flag)
+        data = {
+            'delete_flags': delete_flags
+        }
         return data
 
     def generate_DocumentType_delete_flags(self, document_type_data):
@@ -473,23 +478,28 @@ class ApplicationSettingsSave:
         return data
 
     def generate_calender_delete_flags(self, calender_data):
-        delete_flags = []  # List to store delete_flag for each value
+        delete_flags = []
+        field_name_mapping = {
+            CalenderHolidays: 'calender_id',
+            OrgAttributesLevel: 'low',
+        }
 
         for calender_detail in calender_data['data']:
             delete_flag = True
+            tables_to_check = [CalenderHolidays, OrgAttributesLevel]
+            for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'calender_id')
+                if django_query_instance.django_existence_check(table_name,
+                                                                {field_name: calender_detail['calender_id'],
+                                                                 'client': self.client,
+                                                                 'del_ind': False}):
+                    delete_flag = False
+                    break
 
-            # Check if value is present in the transaction table
-            if django_query_instance.django_existence_check(CalenderHolidays,
-                                                            {'calender_id': calender_detail['calender_id'],
-                                                             'client': self.client,
-                                                             'del_ind': False}):
-                delete_flag = False
-
-            delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
+            delete_flags.append(delete_flag)
             data = {
-                'delete_flags': delete_flags  # Include the delete_flags list in the response data
+                'delete_flags': delete_flags
             }
-
         return data
 
     def generate_message_id_delete_flags(self, message_id_data):
@@ -1338,7 +1348,7 @@ class ApplicationSettingsSave:
             # if entry is not exists in db
             if not django_query_instance.django_existence_check(SourcingMapping,
                                                                 {'sourcing_mapping_guid': source_mapping_detail
-                                                                 ['sourcing_mapping_guid'],
+                                                                ['sourcing_mapping_guid'],
                                                                  'prod_cat_id': source_mapping_detail['prod_cat_id'],
                                                                  'company_id': source_mapping_detail['company_id'],
                                                                  'rule_type': source_mapping_detail['rule_type'],
@@ -1361,7 +1371,7 @@ class ApplicationSettingsSave:
             else:
                 django_query_instance.django_update_query(SourcingMapping,
                                                           {'sourcing_mapping_guid': source_mapping_detail
-                                                           ['sourcing_mapping_guid'],
+                                                          ['sourcing_mapping_guid'],
                                                            'prod_cat_id': source_mapping_detail['prod_cat_id'],
                                                            'company_id': source_mapping_detail['company_id'],
                                                            'rule_type': source_mapping_detail['rule_type'],
@@ -1369,7 +1379,7 @@ class ApplicationSettingsSave:
                                                            },
 
                                                           {'sourcing_mapping_guid': source_mapping_detail
-                                                           ['sourcing_mapping_guid'],
+                                                          ['sourcing_mapping_guid'],
                                                            'prod_cat_id': source_mapping_detail['prod_cat_id'],
                                                            'company_id': source_mapping_detail['company_id'],
                                                            'rule_type': source_mapping_detail['rule_type'],
