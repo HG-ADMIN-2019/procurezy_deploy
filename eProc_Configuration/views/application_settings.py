@@ -453,6 +453,9 @@ def create_update_delete_flags(request):
     if app_data['table_name'] == 'NumberRanges':
         display_data = application_settings_save_instance.generate_number_range_delete_flags(app_data)
         return JsonResponse(display_data, safe=False)
+    if app_data['table_name'] == 'TransactionTypes':
+        display_data = application_settings_save_instance.generate_transaction_type_delete_flags(app_data)
+        return JsonResponse(display_data, safe=False)
     if app_data['table_name'] == 'AccountAssignmentCategory':
         display_data = application_settings_save_instance.generate_aac_delete_flags(app_data)
         return JsonResponse(display_data, safe=False)

@@ -447,6 +447,26 @@ class ApplicationSettingsSave:
 
         return data
 
+    def generate_transaction_type_delete_flags(self, transaction_data):
+        delete_flags = []  # List to store delete_flag for each value
+
+        for transaction_detail in transaction_data['data']:
+            delete_flag = True
+
+            # Check if value is present in the transaction table
+            if django_query_instance.django_existence_check(OrgAttributesLevel,
+                                                            {'low': transaction_detail['transaction_type'],
+                                                             'client': self.client,
+                                                             'del_ind': False}):
+                delete_flag = False
+
+            delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
+            data = {
+                'delete_flags': delete_flags  # Include the delete_flags list in the response data
+            }
+
+        return data
+
     def generate_aac_delete_flags(self, aac_data):
         delete_flags = []
         field_name_mapping = {
