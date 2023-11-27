@@ -164,37 +164,19 @@ function get_main_table_data(){
 }
 
 // Function to get the selected row data
-function get_selected_row_data(){
-    $("#display_basic_table TBODY TR").each(function() {
-        var row = $(this);
-        var transaction_types_arr_obj = {};
-        transaction_types_arr_obj.del_ind = row.find("TD").eq(0).find('input[type="checkbox"]').is(':checked');
-        if( transaction_types_arr_obj.del_ind){
-            transaction_types_arr_obj.transaction_type = row.find("TD").eq(1).html();
-            transaction_types_arr_obj.document_type = row.find("TD").eq(2).html();
-            transaction_types_arr_obj.sequence = row.find("TD").eq(3).html();
-            transaction_types_arr_obj.description = row.find("TD").eq(4).html();
-            transaction_types_arr_obj.active_inactive = row.find("TD").eq(5).find('input[type="checkbox"]').is(':checked');
-            transaction_types_arr_obj.guid = row.find("TD").eq(6).html();
-            main_table_transaction_types_checked.push(transaction_types_arr_obj);
-        }
-    });
-}
-
-// Function to get the selected row data
 function get_row_data(tableSelector){
     main_table_checked = [];
-    $(tableSelector).DataTable().$('input[class="checkbox_check"]').each(function () {
+    $(tableSelector).DataTable().$('td .checkbox_check').each(function () {
         var checkbox = $(this);
         var row = checkbox.closest("tr");
         var transaction_types_arr_obj = {};
         transaction_types_arr_obj.del_ind = checkbox.is(':checked');
         if(transaction_types_arr_obj.del_ind){
-            transaction_types_arr_obj.transaction_type = row.find("TD").eq(1).find('input[type="text"]').val() || row.find("TD").eq(1).html();
-            transaction_types_arr_obj.document_type = row.find("TD").eq(2).find("select option:selected").val() || row.find("TD").eq(2).html();
-            transaction_types_arr_obj.sequence = row.find("TD").eq(3).find('Select').val() || row.find("TD").eq(3).html();
+            transaction_types_arr_obj.transaction_type = row.find("TD").eq(1).find('input[type="text"]').val() || row.find("TD").eq(1).text();
+            transaction_types_arr_obj.document_type = row.find("TD").eq(2).find('input[type="text"]').val() || row.find("TD").eq(2).html();
+            transaction_types_arr_obj.sequence = row.find("TD").eq(3).find('input[type="text"]').val() || row.find("TD").eq(3).html();
             transaction_types_arr_obj.description = row.find("TD").eq(4).find('input[type="text"]').val() || row.find("TD").eq(4).html();
-            transaction_types_arr_obj.active_inactive = row.find("TD").eq(5).find('input[type="checkbox"]').is(':checked') || row.find("TD").eq(5).html();
+            transaction_types_arr_obj.active_inactive = row.find("TD").eq(5).find('input[type="checkbox"]').is(':checked')
             transaction_types_arr_obj.guid = row.find("TD").eq(6).find('input[type="text"]').val() || row.find("TD").eq(6).html();
             main_table_checked.push(transaction_types_arr_obj);
         }

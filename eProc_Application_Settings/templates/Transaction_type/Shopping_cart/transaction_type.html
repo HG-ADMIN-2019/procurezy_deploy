@@ -344,7 +344,7 @@
         table_sort_filter('id_popup_table');
     }
 
-        // Onclick delete Button
+    // Onclick delete Button
     var main_table_checked = [];
     function onclick_delete_button() {
         $('#id_popup_table').DataTable().destroy();
@@ -368,7 +368,7 @@
             success: function(Response) {
                 var docTypeArray = Response.delete_flags; // Get the delete_flags array from the response
                 var res = get_all_checkboxes(); // Function to get all the checkboxes
-                var $chkbox_all = $('td input[class="checkbox_check"]', res);
+                var $chkbox_all = $('td .checkbox_check', res);
                 var j = 0; // Index for docTypeArray
                 for (var i = 0; i < $chkbox_all.length; i++) {
                     if ($chkbox_all[i].checked) {
@@ -385,12 +385,12 @@
                         edit_basic_data +=
                             '<tr>' +
                             '<td>' + check + '</td>' +
-                            '<td><input class="form-control" value="' + row.cells[1].innerHTML + '" disabled></td>' +
-                            '<td><input class="form-control" value="' + row.cells[2].innerHTML + '" disabled></td>' +
-                            '<td><input value="' + row.cells[3].innerHTML + '" class="form-control" disabled></td>' +
-                            '<td><input value="' + row.cells[4].innerHTML + '"  class="form-control" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[1].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[2].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[3].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[4].innerHTML + '" disabled></td>' +
                             '<td><input type="checkbox"  name="active_inactive" disabled></td>' +
-                            '<td hidden><input  type="text" class="form-control" value="' + guid + '"></td>' +
+                            '<td hidden><input required></td>' +
                             '<td class="class_del_checkbox" hidden><input type="checkbox" required></td>' +
                             '</tr>';
                     }

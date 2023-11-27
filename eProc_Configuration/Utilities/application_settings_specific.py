@@ -408,16 +408,21 @@ class ApplicationSettingsSave:
 
     def generate_DocumentType_delete_flags(self, document_type_data):
         delete_flags = []  # List to store delete_flag for each value
+        field_name_mapping = {
+            TransactionTypes: 'document_type',
+            OrgAttributesLevel: 'low',
+        }
 
         for document_type_detail in document_type_data['data']:
             delete_flag = True
-
-            # Check if value is present in the transaction table
-            if django_query_instance.django_existence_check(TransactionTypes,
-                                                            {'document_type': document_type_detail['document_type'],
-                                                             'client': self.client,
-                                                             'del_ind': False}):
-                delete_flag = False
+            tables_to_check = [TransactionTypes, OrgAttributesLevel]
+            for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'document_type')
+                if django_query_instance.django_existence_check(table_name,
+                                                                {field_name: document_type_detail['document_type'],
+                                                                 'client': self.client,
+                                                                 'del_ind': False}):
+                    delete_flag = False
             delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
 
             data = {
@@ -747,16 +752,23 @@ class ApplicationSettingsSave:
 
     def generate_OrgAddress_delete_flags(self, address_data):
         delete_flags = []  # List to store delete_flag for each value
-        address_number = address_data['data']
         delete_flag = True
+        address_number = address_data['data']
+        field_name_mapping = {
+            OrgAddressMap: 'address_number',
+            OrgAttributesLevel: 'low',
+        }
+        tables_to_check = [OrgAddressMap, OrgAttributesLevel]
+        for table_name in tables_to_check:
+            field_name = field_name_mapping.get(table_name, 'address_number')
+            if django_query_instance.django_existence_check(table_name,
+                                                            {field_name: address_number,
+                                                             'client': self.client,
+                                                             'del_ind': False}):
+                delete_flag = False
+                return {'delete_flags': [delete_flag]}
 
-        if django_query_instance.django_existence_check(OrgAddressMap,
-                                                        {'address_number': address_number,
-                                                         'client': self.client,
-                                                         'del_ind': False}):
-            delete_flag = False
-
-        delete_flags.append(delete_flag)
+            delete_flags.append(delete_flag)
 
         data = {
             'delete_flags': delete_flags

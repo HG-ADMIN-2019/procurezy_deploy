@@ -378,19 +378,19 @@
                         var active_inactive = row.cells[5].children.active_inactive.checked
                         dropdown_val.push([active_inactive])
                         if (j < docTypeArray.length && docTypeArray[j] === false) {
-                            check = '<input type="checkbox" disabled>';
+                            check = '<input class="checkbox_check" type="checkbox" disabled>';
                             $('#delete_data').prop('disabled', true);
                         } else {
-                            check = '<input type="checkbox" onclick="enableDeleteButton()">';
+                            check = '<input class="checkbox_check" type="checkbox" onclick="enableDeleteButton()">';
                         }
                         j++; // Move to the next index in docTypeArray
                         edit_basic_data +=
                             '<tr>' +
                             '<td>' + check + '</td>' +
-                            '<td><input class="form-control" value="' + row.cells[1].innerHTML + '" disabled></td>' +
-                            '<td><input class="form-control" value="' + row.cells[2].innerHTML + '" disabled></td>' +
-                            '<td><input value="' + row.cells[3].innerHTML + '" class="form-control" disabled></td>' +
-                            '<td><input value="' + row.cells[4].innerHTML + '"  class="form-control" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[1].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[2].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[3].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[4].innerHTML + '" disabled></td>' +
                             '<td><input type="checkbox"  name="active_inactive" disabled></td>' +
                             '<td hidden><input  type="text" class="form-control" value="' + guid + '"></td>' +
                             '<td class="class_del_checkbox" hidden><input type="checkbox" required></td>' +
