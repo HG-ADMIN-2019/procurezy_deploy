@@ -1872,10 +1872,7 @@ def get_grouping_detail(company_id, prod_cat_id, call_off, product_id):
 
 def get_source_relevant_ind(company_code, prod_cat_id, call_off, product_id):
     srcing_flag = False
-    # temp = SourcingRule.objects.filter(prod_cat_id_from__lte=prod_cat_id,
-    #                                    prod_cat_id_to__gte=prod_cat_id,
-    #                                    client=global_variables.GLOBAL_CLIENT,
-    #                                    del_ind=False)
+
     if django_query_instance.django_existence_check(PurchaseControl,
                                                     {'call_off': call_off,
                                                      'company_code_id': company_code,

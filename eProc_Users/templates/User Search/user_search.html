@@ -533,15 +533,15 @@ $('form').on('reset',function (e) {
 
 function reload()
 {
-    localStorage.setItem("username", document.getElementById("username").value);
-    localStorage.setItem("first_name", document.getElementById("first_name").value);
-    localStorage.setItem("last_name", document.getElementById("last_name").value);
-    localStorage.setItem("email", document.getElementById("email").value);
-    localStorage.setItem("user_type", document.getElementById("user_type").value);
-    localStorage.setItem("employee_id", document.getElementById("employee_id").value);
-    localStorage.setItem("user_locked", document.getElementById("user_locked_id").checked);
-    localStorage.setItem("pwd_locked", document.getElementById("pwd_locked_id").checked);
-    localStorage.setItem("is_active", document.getElementById("is_active_id").checked);
+    localStorage.setItem("user_name", document.getElementById("username").value);
+    localStorage.setItem("firstname", document.getElementById("first_name").value);
+    localStorage.setItem("lastname", document.getElementById("last_name").value);
+    localStorage.setItem("user_email", document.getElementById("email").value);
+    localStorage.setItem("userType", document.getElementById("user_type").value);
+    localStorage.setItem("employeeId", document.getElementById("employee_id").value);
+    localStorage.setItem("userLocked", document.getElementById("user_locked_id").checked);
+    localStorage.setItem("pwdLocked", document.getElementById("pwd_locked_id").checked);
+    localStorage.setItem("isActive", document.getElementById("is_active_id").checked);
     OpenLoaderPopup();
 }
 
