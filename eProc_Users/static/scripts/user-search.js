@@ -2,21 +2,21 @@
  $(document).ready( function() {
    nav_bar_admin();
    $("body").css("padding-top", "7rem");
-   $('#username').val(localStorage.getItem("username"));
-   $('#first_name').val(localStorage.getItem("first_name"));
-   $('#last_name').val(localStorage.getItem("last_name"));
-   $('#email').val(localStorage.getItem("email"));
-   $('#user_type').val(localStorage.getItem("user_type"));
-   $('#employee_id').val(localStorage.getItem("employee_id"));
-   if(localStorage.getItem("user_locked") == "true"){
+   $('#username').val(localStorage.getItem("user_name"));
+   $('#first_name').val(localStorage.getItem("firstname"));
+   $('#last_name').val(localStorage.getItem("lastname"));
+   $('#email').val(localStorage.getItem("user_email"));
+   $('#user_type').val(localStorage.getItem("userType"));
+   $('#employee_id').val(localStorage.getItem("employeeId"));
+   if(localStorage.getItem("userLocked") == "true"){
         $('#user_locked_id').prop("checked", true)
    }
    else{ $('#user_locked_id').prop("checked", false)}
-   if(localStorage.getItem("pwd_locked") == "true"){
+   if(localStorage.getItem("pwdLocked") == "true"){
         $('#pwd_locked_id').prop("checked", true)
    }
    else{ $('#pwd_locked_id').prop("checked", false)}
-   if(localStorage.getItem("is_active") == "true"){
+   if(localStorage.getItem("isActive") == "true"){
         $('#is_active_id').prop("checked", true)
    }
    else{ $('#is_active_id').prop("checked", false)}
