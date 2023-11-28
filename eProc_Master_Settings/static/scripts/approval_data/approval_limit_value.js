@@ -91,6 +91,11 @@ function delete_duplicate() {
         upper_limit_value = row.find("TD").eq(4).find('input[type="number"]').val().toUpperCase();
         app_lim_dec_guid = row.find("TD").eq(6).find('input[type="text"]').val().toUpperCase()
         alv_compare = alv.app_code_id +'-'+ alv.app_types +'-'+ alv.company_id
+       if (checked_box){
+                del_ind = '1'
+       }
+       else{
+                del_ind = '0'
         if (alv_code_check.includes(alv_compare)) {
             $(row).remove();
         }
@@ -100,6 +105,7 @@ function delete_duplicate() {
             $(row).remove();
         }
         main_table_low_value.push(alv_compare);
+       }
     })
     table_sort_filter_popup_pagination('id_popup_table')
     check_data()
@@ -204,7 +210,7 @@ function get_main_table_data_upload() {
         main_attribute.app_types = row.find("TD").eq(2).html();
         main_attribute.currency_id = row.find("TD").eq(5).html();
         main_attribute.del_ind = row.find("TD").eq(7).find('input[type="checkbox"]').is(':checked');
-        var alv_compare_maintable = main_attribute.app_code_id +'-'+ main_attribute.company_id +'-'+main_attribute.app_types +'-'+ main_attribute.currency_id + '-'+ main_attribute.del_ind
+        var alv_compare_maintable = main_attribute.app_code_id +'-'+ main_attribute.company_id +'-'+main_attribute.app_types +'-'+ main_attribute.currency_id
         main_table_low_value.push(alv_compare_maintable);
     });
     table_sort_filter('display_basic_table');
