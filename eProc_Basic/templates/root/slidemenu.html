@@ -62,7 +62,7 @@
         </li>
         {% endif %}
         {% if slide_menu.SOM %}
-        <li class="sidenav__listitem {% if is_content_mgmnt_active %} sidenav__listitem-active {% endif %}" title="Content Management" id="sidenav__listitem-som">
+        <li class="sidenav__listitem {% if is_som_active %} sidenav__listitem-active {% endif %}" title="Content Management" id="sidenav__listitem-som">
             <a href="{% url 'eProc_Supplier_Order_Management:po_extract' %}">
                 <div>
                     <div class="sidenav__icon-container"><i class="fas fa-list fa-lg" ></i></div>
@@ -72,7 +72,7 @@
         </li>
         {% endif %}
         {% if slide_menu.SOURCING %}
-        <li class="sidenav__listitem {% if is_content_mgmnt_active %} sidenav__listitem-active {% endif %}" title="Sourcing" id="sidenav__listitem-sourcing">
+        <li class="sidenav__listitem {% if is_sourcing_active %} sidenav__listitem-active {% endif %}" title="Sourcing" id="sidenav__listitem-sourcing">
             <a href="{% url 'eProc_Purchaser_Cockpit:sc_item_field_filter' %}">
                 <div>
                     <div class="sidenav__icon-container"><i class="fas fa-chalkboard-teacher fa-lg" ></i></div>
@@ -82,7 +82,7 @@
         </li>
         {% endif %}
         {% if slide_menu.TIME_SHEET %}
-        <li class="sidenav__listitem {% if is_content_mgmnt_active %} sidenav__listitem-active {% endif %}" title="Time Sheet" id="sidenav__listitem-timesheet">
+        <li class="sidenav__listitem {% if is_timesheet_active %} sidenav__listitem-active {% endif %}" title="Time Sheet" id="sidenav__listitem-timesheet">
             <a href="{% url 'eProc_Projects:proj_user_search' %}">
                 <div>
                     <div class="sidenav__icon-container"><i class="far fa-clock fa-lg" ></i></div>

@@ -90,7 +90,8 @@ def sc_item_field_filter(request):
         'comp_list': comp_list,
         'inc_nav': True,
         'shopping': True,
-        'is_slide_menu': True
+        'is_slide_menu': True,
+        'is_sourcing_active': True
     }
 
     return render(request, 'Purchaser_Cockpit/sourcing_cockpit.html', context)
