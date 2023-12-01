@@ -83,19 +83,16 @@ function delete_duplicate() {
     $("#id_popup_table TBODY TR").each(function() {
         var row = $(this);
 
-        //*************** reading data from the pop-up ***************
+        //************** reading data from the pop-up **************
         app_code_id = row.find("TD").eq(3).find('input[type="text"]').val().toUpperCase();
         company_id = row.find("TD").eq(1).find("select option:selected").val();
         app_types = row.find("TD").eq(2).find("select option:selected").val();
         currency_id = row.find("TD").eq(5).find("select option:selected").val();
         upper_limit_value = row.find("TD").eq(4).find('input[type="number"]').val().toUpperCase();
         app_lim_dec_guid = row.find("TD").eq(6).find('input[type="text"]').val().toUpperCase()
-        alv_compare = alv.app_code_id +'-'+ alv.app_types +'-'+ alv.company_id
-       if (checked_box){
-                del_ind = '1'
-       }
-       else{
-                del_ind = '0'
+        alv_compare = app_code_id +'-'+ company_id + '-'+ app_types + '-'+ currency_id
+       // Only proceed if app_code_id && company_id && app_types && currency_id are not empty
+      if (app_code_id && company_id && app_types && currency_id) {
         if (alv_code_check.includes(alv_compare)) {
             $(row).remove();
         }
@@ -105,7 +102,7 @@ function delete_duplicate() {
             $(row).remove();
         }
         main_table_low_value.push(alv_compare);
-       }
+      }
     })
     table_sort_filter_popup_pagination('id_popup_table')
     check_data()
