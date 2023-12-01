@@ -343,16 +343,23 @@ class ApplicationSettingsSave:
 
     def generate_attributes_delete_flags(self, attributes_data):
         delete_flags = []  # List to store delete_flag for each value
+        field_name_mapping = {
+            OrgModelNodetypeConfig: 'node_values',
+            OrgAttributesLevel: 'attribute_id',
+        }
 
         for attributes_detail in attributes_data['data']:
             delete_flag = True
-
-            # Check if value is present in the transaction table
-            if django_query_instance.django_existence_check(OrgModelNodetypeConfig,
-                                                            {'node_values': attributes_detail['attribute_id'],
-                                                             'client': self.client,
-                                                             'del_ind': False}):
-                delete_flag = False
+            tables_to_check = [OrgModelNodetypeConfig, OrgAttributesLevel]
+            for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'node_values')
+                # Check if value is present in the transaction table
+                if django_query_instance.django_existence_check(table_name,
+                                                                {field_name: attributes_detail['attribute_id'],
+                                                                 'client': self.client,
+                                                                 'del_ind': False}):
+                    delete_flag = False
+                    break
             delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
 
             data = {
