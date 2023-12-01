@@ -382,37 +382,47 @@ class ApplicationSettingsSave:
         return data
 
     def generate_roles_delete_flags(self, roles_data):
-        delete_flags = []  # List to store delete_flag for each value
+        delete_flags = []
+        field_name_mapping = {
+            Authorization: 'role',
+            OrgAttributesLevel: 'low',
+        }
 
         for roles_detail in roles_data['data']:
             delete_flag = True
+            tables_to_check = [Authorization, OrgAttributesLevel]
+            for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'role')
+                if django_query_instance.django_existence_check(table_name,
+                                                                {field_name: roles_detail['role'],
+                                                                 'client': self.client,
+                                                                 'del_ind': False}):
+                    delete_flag = False
+                    break
 
-            # Check if value is present in the transaction table
-            if django_query_instance.django_existence_check(Authorization,
-                                                            {'role': roles_detail['role'],
-                                                             'client': self.client,
-                                                             'del_ind': False}):
-                delete_flag = False
-            delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
-
-            data = {
-                'delete_flags': delete_flags
-            }
-
+            delete_flags.append(delete_flag)
+        data = {
+            'delete_flags': delete_flags
+        }
         return data
 
     def generate_DocumentType_delete_flags(self, document_type_data):
         delete_flags = []  # List to store delete_flag for each value
+        field_name_mapping = {
+            TransactionTypes: 'document_type',
+            OrgAttributesLevel: 'low',
+        }
 
         for document_type_detail in document_type_data['data']:
             delete_flag = True
-
-            # Check if value is present in the transaction table
-            if django_query_instance.django_existence_check(TransactionTypes,
-                                                            {'document_type': document_type_detail['document_type'],
-                                                             'client': self.client,
-                                                             'del_ind': False}):
-                delete_flag = False
+            tables_to_check = [TransactionTypes, OrgAttributesLevel]
+            for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'document_type')
+                if django_query_instance.django_existence_check(table_name,
+                                                                {field_name: document_type_detail['document_type'],
+                                                                 'client': self.client,
+                                                                 'del_ind': False}):
+                    delete_flag = False
             delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
 
             data = {
@@ -442,18 +452,44 @@ class ApplicationSettingsSave:
 
         return data
 
-    def generate_aac_delete_flags(self, aac_data):
+    def generate_transaction_type_delete_flags(self, transaction_data):
         delete_flags = []  # List to store delete_flag for each value
+
+        for transaction_detail in transaction_data['data']:
+            delete_flag = True
+
+            # Check if value is present in the transaction table
+            if django_query_instance.django_existence_check(OrgAttributesLevel,
+                                                            {'low': transaction_detail['transaction_type'],
+                                                             'client': self.client,
+                                                             'del_ind': False}):
+                delete_flag = False
+
+            delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
+            data = {
+                'delete_flags': delete_flags  # Include the delete_flags list in the response data
+            }
+
+        return data
+
+    def generate_aac_delete_flags(self, aac_data):
+        delete_flags = []
+        field_name_mapping = {
+            AccountingData: 'account_assign_cat',
+            AccountingDataDesc: 'account_assign_cat',
+            DetermineGLAccount: 'account_assign_cat',
+            OrgAttributesLevel: 'low',
+        }
 
         for aac_detail in aac_data['data']:
             delete_flag = True
 
             # Tables to check for existence
-            tables_to_check = [AccountingData, AccountingDataDesc, DetermineGLAccount]
-
+            tables_to_check = [AccountingData, AccountingDataDesc, DetermineGLAccount, OrgAttributesLevel]
             for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'account_assign_cat')
                 if django_query_instance.django_existence_check(table_name,
-                                                                {'account_assign_cat': aac_detail['account_assign_cat'],
+                                                                {field_name: aac_detail['account_assign_cat'],
                                                                  'client': self.client,
                                                                  'del_ind': False}):
                     delete_flag = False
@@ -467,23 +503,28 @@ class ApplicationSettingsSave:
         return data
 
     def generate_calender_delete_flags(self, calender_data):
-        delete_flags = []  # List to store delete_flag for each value
+        delete_flags = []
+        field_name_mapping = {
+            CalenderHolidays: 'calender_id',
+            OrgAttributesLevel: 'low',
+        }
 
         for calender_detail in calender_data['data']:
             delete_flag = True
+            tables_to_check = [CalenderHolidays, OrgAttributesLevel]
+            for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'calender_id')
+                if django_query_instance.django_existence_check(table_name,
+                                                                {field_name: calender_detail['calender_id'],
+                                                                 'client': self.client,
+                                                                 'del_ind': False}):
+                    delete_flag = False
+                    break
 
-            # Check if value is present in the transaction table
-            if django_query_instance.django_existence_check(CalenderHolidays,
-                                                            {'calender_id': calender_detail['calender_id'],
-                                                             'client': self.client,
-                                                             'del_ind': False}):
-                delete_flag = False
-
-            delete_flags.append(delete_flag)  # Store delete_flag value for each iteration
+            delete_flags.append(delete_flag)
             data = {
-                'delete_flags': delete_flags  # Include the delete_flags list in the response data
+                'delete_flags': delete_flags
             }
-
         return data
 
     def generate_message_id_delete_flags(self, message_id_data):
@@ -547,18 +588,23 @@ class ApplicationSettingsSave:
         return data
 
     def generate_company_delete_flags(self, company_data):
-        delete_flags = []  # List to store delete_flag for each value
+        delete_flags = []
+        field_name_mapping = {
+            AccountingData: 'company_id', AccountingDataDesc: 'company_id', DetermineGLAccount: 'company_id',
+            WorkflowSchema: 'company_id', SpendLimitValue: 'company_id', SpendLimitId: 'company_id',
+            ApproverLimitValue: 'company_id', ApproverLimit: 'company_id', WorkflowACC: 'company_id',
+            OrgAddressMap: 'company_id', OrgAttributesLevel: 'low',
+        }
 
         for company_detail in company_data['data']:
             delete_flag = True
-
-            # Tables to check for existence
             tables_to_check = [AccountingData, AccountingDataDesc, DetermineGLAccount, WorkflowSchema, SpendLimitValue,
-                               SpendLimitId, ApproverLimitValue, ApproverLimit, WorkflowACC, OrgAddressMap]
-
+                               SpendLimitId, ApproverLimitValue, ApproverLimit, WorkflowACC, OrgAddressMap,
+                               OrgAttributesLevel]
             for table_name in tables_to_check:
+                field_name = field_name_mapping.get(table_name, 'company_id')
                 if django_query_instance.django_existence_check(table_name,
-                                                                {'company_id': company_detail['company_id'],
+                                                                {field_name: company_detail['company_id'],
                                                                  'client': self.client,
                                                                  'del_ind': False}):
                     delete_flag = False
@@ -706,16 +752,23 @@ class ApplicationSettingsSave:
 
     def generate_OrgAddress_delete_flags(self, address_data):
         delete_flags = []  # List to store delete_flag for each value
-        address_number = address_data['data']
         delete_flag = True
+        address_number = address_data['data']
+        field_name_mapping = {
+            OrgAddressMap: 'address_number',
+            OrgAttributesLevel: 'low',
+        }
+        tables_to_check = [OrgAddressMap, OrgAttributesLevel]
+        for table_name in tables_to_check:
+            field_name = field_name_mapping.get(table_name, 'address_number')
+            if django_query_instance.django_existence_check(table_name,
+                                                            {field_name: address_number,
+                                                             'client': self.client,
+                                                             'del_ind': False}):
+                delete_flag = False
+                return {'delete_flags': [delete_flag]}
 
-        if django_query_instance.django_existence_check(OrgAddressMap,
-                                                        {'address_number': address_number,
-                                                         'client': self.client,
-                                                         'del_ind': False}):
-            delete_flag = False
-
-        delete_flags.append(delete_flag)
+            delete_flags.append(delete_flag)
 
         data = {
             'delete_flags': delete_flags
@@ -1327,7 +1380,7 @@ class ApplicationSettingsSave:
             # if entry is not exists in db
             if not django_query_instance.django_existence_check(SourcingMapping,
                                                                 {'sourcing_mapping_guid': source_mapping_detail
-                                                                 ['sourcing_mapping_guid'],
+                                                                ['sourcing_mapping_guid'],
                                                                  'prod_cat_id': source_mapping_detail['prod_cat_id'],
                                                                  'company_id': source_mapping_detail['company_id'],
                                                                  'rule_type': source_mapping_detail['rule_type'],
@@ -1350,7 +1403,7 @@ class ApplicationSettingsSave:
             else:
                 django_query_instance.django_update_query(SourcingMapping,
                                                           {'sourcing_mapping_guid': source_mapping_detail
-                                                           ['sourcing_mapping_guid'],
+                                                          ['sourcing_mapping_guid'],
                                                            'prod_cat_id': source_mapping_detail['prod_cat_id'],
                                                            'company_id': source_mapping_detail['company_id'],
                                                            'rule_type': source_mapping_detail['rule_type'],
@@ -1358,7 +1411,7 @@ class ApplicationSettingsSave:
                                                            },
 
                                                           {'sourcing_mapping_guid': source_mapping_detail
-                                                           ['sourcing_mapping_guid'],
+                                                          ['sourcing_mapping_guid'],
                                                            'prod_cat_id': source_mapping_detail['prod_cat_id'],
                                                            'company_id': source_mapping_detail['company_id'],
                                                            'rule_type': source_mapping_detail['rule_type'],

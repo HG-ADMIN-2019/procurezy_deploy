@@ -596,6 +596,14 @@ table th {
   background-color: #0f0f98;
 }
 
+#sidenav__listitem-sourcing .sidenav__icon-container {
+  background-color: #8ed5e0;
+}
+
+#sidenav__listitem-timesheet .sidenav__icon-container {
+  background-color: #e3848e;
+}
+
 .navbar-exist {
   padding-top: 7.3rem;
 }

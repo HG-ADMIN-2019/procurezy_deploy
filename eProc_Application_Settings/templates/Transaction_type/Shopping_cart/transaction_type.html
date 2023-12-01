@@ -28,8 +28,8 @@
                     <button class="btn btn-secondary btn-sm" title="Edit" id="id_edit_data" onclick="onclick_edit_button()">
                         <i class="fas fa-edit"></i> edit
                     </button>
-                   <button class="btn btn-outline-danger btn-sm" title="Delete" id="id_delete_data" value="transaction_types_delete" style="display:none;" data-toggle="modal" data-target="#id_delete_confirm_popup">
-                        <i class="fa fa-trash" aria-hidden="true" title="Delete Line"></i> delete
+                    <button class="btn btn-outline-danger btn-sm" id="id_delete_data" title= "DELETE" value="Delete" style="display:none;" onclick="onclick_delete_button()">
+                        <i class="fa fa-trash"></i> delete
                     </button>
                     <button class="btn btn-primary btn-sm"  title="Copy" id="id_copy_data" style="display:none;" value="COPY"  type="button" onclick="onclick_copy_button()">
                         <i class="fa fa-copy"></i> copy
@@ -136,6 +136,9 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary remove_upload_data" title="Cancel" data-dismiss="modal"><i class="fas fa-times"></i> cancel</button>
                     <button class="btn btn-primary" title="Save" id="save_id"><i class="fas fa-save"></i> save</button>
+                    <button class="btn btn-primary btn-sm" title="Delete" id="delete_data" value="DELETE" data-toggle="modal" data-target="#id_delete_confirm_popup" onclick="hideModal()">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
                 </div>
             </div>
         </div>
@@ -203,6 +206,7 @@
                 $("#error_msg_id").css("display", "none")
                 $( "#header_select").prop( "hidden", false );
                 GLOBAL_ACTION = button.value
+                display_button();
                 $('#id_popup_table').DataTable().destroy();
                 $('#myModal').modal('show');
                 $("#id_popup_tbody").empty();
@@ -339,17 +343,86 @@
         }
         table_sort_filter('id_popup_table');
     }
+
+    // Onclick delete Button
+    var main_table_checked = [];
+    function onclick_delete_button() {
+        $('#id_popup_table').DataTable().destroy();
+        $("#error_msg_id").css("display", "none")
+        $("#id_popup_tbody").empty();
+        GLOBAL_ACTION = "DELETE";
+        var edit_basic_data = "";
+        var guid = '';
+        var dropdown_values = [];
+        var dropdown_val = [];
+        get_row_data("#display_basic_table"); // Function call to get the selected row data
+        display_button(); // Call the display_button function to show/hide the buttons
+        var data = {'data': main_table_checked, 'table_name': 'TransactionTypes', 'action': GLOBAL_ACTION };
+        OpenLoaderPopup();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'eProc_Configuration:create_update_delete_flags' %}",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(Response) {
+                var docTypeArray = Response.delete_flags; // Get the delete_flags array from the response
+                var res = get_all_checkboxes(); // Function to get all the checkboxes
+                var $chkbox_all = $('td .checkbox_check', res);
+                var j = 0; // Index for docTypeArray
+                for (var i = 0; i < $chkbox_all.length; i++) {
+                    if ($chkbox_all[i].checked) {
+                        var row = $chkbox_all[i].parentNode.parentNode;
+                        var active_inactive = row.cells[5].children.active_inactive.checked
+                        dropdown_val.push([active_inactive])
+                        if (j < docTypeArray.length && docTypeArray[j] === false) {
+                            check = '<input class="checkbox_check" type="checkbox" disabled>';
+                            $('#delete_data').prop('disabled', true);
+                        } else {
+                            check = '<input class="checkbox_check" type="checkbox" onclick="enableDeleteButton()">';
+                        }
+                        j++; // Move to the next index in docTypeArray
+                        edit_basic_data +=
+                            '<tr>' +
+                            '<td>' + check + '</td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[1].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[2].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[3].innerHTML + '" disabled></td>' +
+                            '<td><input class="form-control" type="text" value="' + row.cells[4].innerHTML + '" disabled></td>' +
+                            '<td><input type="checkbox"  name="active_inactive" disabled></td>' +
+                            '<td hidden><input required></td>' +
+                            '<td class="class_del_checkbox" hidden><input type="checkbox" required></td>' +
+                            '</tr>';
+                    }
+                }
+                $('#id_popup_tbody').append(edit_basic_data);
+                var k = 0;
+                $("#id_popup_table TBODY TR").each(function () {
+                    var row = $(this);
+                    var active_inactive = dropdown_val[k][0]
+                    if(active_inactive) {
+                        $(row.find("TD").eq(5).find('input[name="active_inactive"]').attr('checked', 'checked'));
+                    }
+                    k++;
+                })
+                $("#id_del_ind_checkbox").prop("hidden", true);
+                $('#myModal').modal('show');
+                table_sort_filter('id_popup_table');
+                CloseLoaderPopup();
+            },
+        });
+    }
   
     //delete the selected row in db................
     var main_table_transaction_types_checked = [];
     function main_table_delete() {
         $('#success_msg_id').empty()
         GLOBAL_ACTION = 'DELETE'
-        main_table_transaction_types_checked = [];
+        main_table_checked = [];
         $('#display_basic_table').DataTable().destroy();
-        get_selected_row_data(); // Function call to get the selected row data
+        get_row_data("#id_popup_table");
         $('#id_delete_confirm_popup').modal('hide');
-        data = {'data':main_table_transaction_types_checked,'table_name':'TransactionTypes','action':GLOBAL_ACTION}
+        data = {'data':main_table_checked,'table_name':'TransactionTypes','action':GLOBAL_ACTION}
         OpenLoaderPopup();
         $.ajax({
             type: 'POST',
