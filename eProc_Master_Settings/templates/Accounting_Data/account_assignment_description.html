@@ -247,18 +247,17 @@
 
     // Function for add a new row data
 function new_row_data() {
-    acc_value_desc_dropdown();
     basic_add_new_html = '<tr> <td><input class="input" type="checkbox" required></td>'+
     '<td><select id="comp_id" class="form-control" onchange="get_acct_assmt_cat(this)">' + company_dropdwn + ' </select></td>'+
     '<td><select id="acct_assmt_cat" class="form-control" onchange="get_acct_assmt_val(this)">'+assign_val.acc_ass_dropdwn+'</select></td>'+
     '<td><select class="form-control">'+assign_val.acc_ass_val_dropdwn+'</select></td>'+
     '<td><input class="form-control check_special_char" type="text"  maxlength="255" ></td>'+
     '<td><select  id="language_dropdw" class="form-control">' + language_dropdwn + '</select></td>'+
-    '<td hidden><input value="GUID" hidden></td>'+
-    '<td class="class_del_checkbox" hidden><input type="checkbox" required></td> <td hidden></td>'+
+    '<td hidden><input type="text" class="form-control" name="guid"></td>'+
+    '<td class="class_del_checkbox" hidden><input type="checkbox" required></td>'+
      '</tr>';
     $('#id_popup_tbody').append(basic_add_new_html);
-    table_sort_filter('id_popup_table');
+    table_sort_filter("id_popup_table");
 }
 
     //onclick of data Upload copy data to modal pop-up
@@ -548,11 +547,11 @@ function new_row_data() {
         GLOBAL_ACTION = 'DELETE'
         main_table_checked = [];
         $('#display_basic_table').DataTable().destroy();
-        get_row_data("#id_popup_table"); // Function call to get the selected row data
+        get_row_data("#id_popup_table");
         $('#id_delete_confirm_popup').modal('hide');
-            data = {'data':main_table_checked,'table_name':'AccountingDataDesc','action':GLOBAL_ACTION}
-            OpenLoaderPopup();
-            $.ajax({
+        data = {'data':main_table_checked,'table_name':'AccountingDataDesc','action':GLOBAL_ACTION}
+        OpenLoaderPopup();
+        $.ajax({
             type: 'POST',
             url: "{% url 'eProc_Master_Settings:create_update_master_data' %}",
             data: JSON.stringify(data),
@@ -757,6 +756,7 @@ function new_row_data() {
                 $("#error_msg_id").css("display", "none")
                 $("#header_select").prop( "hidden", false );
                 GLOBAL_ACTION = button.value
+                display_button();
                 $('#Acc_desc_Modal').modal('show');
                 new_row_data();   // Add a new row in popup
                 var account_assign = '';

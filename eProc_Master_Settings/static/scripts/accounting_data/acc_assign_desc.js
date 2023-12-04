@@ -83,6 +83,7 @@ function onclick_upload_button() {
 // on click copy icon display the selected checkbox data
 function onclick_copy_button() {
     GLOBAL_ACTION = "COPY"
+    display_button();
     onclick_copy_update_button("copy")
     document.getElementById("id_del_add_button").style.display = "block";
     $("#save_id").prop("hidden", false);
@@ -91,11 +92,11 @@ function onclick_copy_button() {
 // on click update icon display the selected checkbox data to update
 function onclick_update_button() {
     GLOBAL_ACTION = "UPDATE"
+    display_button();
     onclick_copy_update_button("UPDATE")
     document.getElementById("id_del_add_button").style.display = "none";
     $("#save_id").prop("hidden", false);
 }
-
 
 function get_acct_assmt_cat(rowid){
     var row = $(rowid);
