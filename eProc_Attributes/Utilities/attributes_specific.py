@@ -236,12 +236,11 @@ def get_dropdown_value(client, attr_value):
         return attribute_values_list
     if attr_value == CONST_CO_CODE:
         attr_val_desc_list = DjangoQueries.django_filter_query(OrgCompanies,
-                                                           {'client': global_variables.GLOBAL_CLIENT},
-                                                           None,
-                                                           ['company_id', 'name1'])
-        attribute_values_list = append_attribute_value_description(attr_val_desc_list,
-                                                                     'company_id',
-                                                                     'name1')[0]
+                                                            {'client': global_variables.GLOBAL_CLIENT,
+                                                             'del_ind': False},
+                                                             None,
+                                                             ['company_id', 'name1'])
+        attribute_values_list = append_attribute_value_description(attr_val_desc_list, 'company_id', 'name1')[0]
         return attribute_values_list
     if attr_value == CONST_DEF_DOC_SEARCH:
         attr_val_desc_list = DjangoQueries.django_filter_query(DocumentType,
