@@ -190,16 +190,19 @@ def get_acc_value_desc_list(acc_asg_cat):
     """
     accounting_data = DjangoQueries.django_filter_value_list_query(AccountingData,
                                                                    {'client': global_variables.GLOBAL_CLIENT,
+                                                                    'del_ind': False,
                                                                     'account_assign_cat': acc_asg_cat},
                                                                    'account_assign_value')
     accounting_data_desc = DjangoQueries.django_filter_query(AccountingDataDesc,
                                                              {'client': global_variables.GLOBAL_CLIENT,
+                                                              'del_ind': False,
                                                               'account_assign_cat': acc_asg_cat,
                                                               'account_assign_value__in': accounting_data,
-                                                              'language_id':global_variables.GLOBAL_USER_LANGUAGE},
+                                                              'language_id': global_variables.GLOBAL_USER_LANGUAGE},
                                                              None,
                                                              ['account_assign_value', 'description'])
-    attr_values_list = append_description_atrr_value_exists(accounting_data_desc,accounting_data,'account_assign_value', 'description')[0]
+    attr_values_list = append_description_atrr_value_exists(accounting_data_desc,
+                                                            accounting_data, 'account_assign_value', 'description')[0]
     return attr_values_list
 
 
