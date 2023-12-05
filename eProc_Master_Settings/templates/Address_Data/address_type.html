@@ -612,7 +612,7 @@
                     $("#id_error_msg_date_type").prop("hidden",false);
                     error_message = ui_messeges("JMSG002")// Get message details
                     var display8 = error_message;
-                    document.getElementById("id_error_msg_date_type").innerHTML = display8+ "valid_from";
+                    document.getElementById("id_error_msg_date_type").innerHTML = display8+ " for valid_from";
                     $("#id_check_special_character_messages").prop("hidden",false);
                     count = count +1;
              }
@@ -623,10 +623,20 @@
                     $("#id_error_msg_date_type").prop("hidden",false);
                     error_message = ui_messeges("JMSG002")// Get message details
                     var display8 = error_message;
-                    document.getElementById("id_error_msg_date_type").innerHTML = display8+ "valid_to";
+                    document.getElementById("id_error_msg_date_type").innerHTML = display8+ " for valid_to";
                     $("#id_check_special_character_messages").prop("hidden",false);
                     count = count +1;
              }
+              else if(address_type_dic.valid_from > address_type_dic.valid_to) {
+                    $(row.find("TD").eq(4).find('input[type="text"]')).css("border", "1px solid #FF0000");
+                    row_color_highlight_empty(row);
+                    $("#id_error_msg_date_type").prop("hidden",false);
+                    error_message = ui_messeges("JMSG017")// Get message details
+                    var display8 = error_message;
+                    document.getElementById("id_error_msg_date_type").innerHTML = display8+ "valid_to";
+                    $("#id_check_special_character_messages").prop("hidden", false);
+                    count = count +1;
+              }
              else if(addtype_code_check.includes(address_compare)){
                  $(row).css("border", "#f8d7da");
                  row_color_highlight(row);

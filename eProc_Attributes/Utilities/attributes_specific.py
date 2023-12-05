@@ -190,16 +190,19 @@ def get_acc_value_desc_list(acc_asg_cat):
     """
     accounting_data = DjangoQueries.django_filter_value_list_query(AccountingData,
                                                                    {'client': global_variables.GLOBAL_CLIENT,
+                                                                    'del_ind': False,
                                                                     'account_assign_cat': acc_asg_cat},
                                                                    'account_assign_value')
     accounting_data_desc = DjangoQueries.django_filter_query(AccountingDataDesc,
                                                              {'client': global_variables.GLOBAL_CLIENT,
+                                                              'del_ind': False,
                                                               'account_assign_cat': acc_asg_cat,
                                                               'account_assign_value__in': accounting_data,
-                                                              'language_id':global_variables.GLOBAL_USER_LANGUAGE},
+                                                              'language_id': global_variables.GLOBAL_USER_LANGUAGE},
                                                              None,
                                                              ['account_assign_value', 'description'])
-    attr_values_list = append_description_atrr_value_exists(accounting_data_desc,accounting_data,'account_assign_value', 'description')[0]
+    attr_values_list = append_description_atrr_value_exists(accounting_data_desc,
+                                                            accounting_data, 'account_assign_value', 'description')[0]
     return attr_values_list
 
 
@@ -233,12 +236,11 @@ def get_dropdown_value(client, attr_value):
         return attribute_values_list
     if attr_value == CONST_CO_CODE:
         attr_val_desc_list = DjangoQueries.django_filter_query(OrgCompanies,
-                                                           {'client': global_variables.GLOBAL_CLIENT},
-                                                           None,
-                                                           ['company_id', 'name1'])
-        attribute_values_list = append_attribute_value_description(attr_val_desc_list,
-                                                                     'company_id',
-                                                                     'name1')[0]
+                                                            {'client': global_variables.GLOBAL_CLIENT,
+                                                             'del_ind': False},
+                                                             None,
+                                                             ['company_id', 'name1'])
+        attribute_values_list = append_attribute_value_description(attr_val_desc_list, 'company_id', 'name1')[0]
         return attribute_values_list
     if attr_value == CONST_DEF_DOC_SEARCH:
         attr_val_desc_list = DjangoQueries.django_filter_query(DocumentType,
