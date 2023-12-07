@@ -630,29 +630,49 @@ class ApplicationSettingsSave:
             AccountingDataDesc: 'account_assign_value',
             WorkflowACC: 'acc_value',
             DetermineGLAccount: 'gl_acc_num',
+            OrgAttributesLevel: 'low',
         }
 
         for aav_detail in aav_data['data']:
             delete_flag = True
-            tables_to_check = [AccountingDataDesc, DetermineGLAccount, WorkflowACC]
+            tables_to_check = [AccountingDataDesc, DetermineGLAccount, WorkflowACC, OrgAttributesLevel]
 
             # Check if value is present in the table
             for table_name in tables_to_check:
                 field_name = field_name_mapping.get(table_name, 'account_assign_value')
-                if django_query_instance.django_existence_check(table_name,
-                                                                {'company_id': aav_detail['company_id'],
-                                                                 'account_assign_cat': aav_detail[
-                                                                     'account_assign_cat'],
-                                                                 field_name: aav_detail['account_assign_value'],
-                                                                 'client': self.client,
-                                                                 'del_ind': False}):
-                    delete_flag = False
-                    break
+
+                # Check if the table is OrgAttributesLevel
+                if table_name == OrgAttributesLevel:
+                    if django_query_instance.django_existence_check(
+                            table_name,
+                            {
+                                field_name: aav_detail['account_assign_value'],
+                                'client': self.client,
+                                'del_ind': False
+                            }
+                    ):
+                        delete_flag = False
+                        break
+                else:
+                    # For other tables, include additional conditions
+                    if django_query_instance.django_existence_check(
+                            table_name,
+                            {
+                                'company_id': aav_detail['company_id'],
+                                'account_assign_cat': aav_detail['account_assign_cat'],
+                                field_name: aav_detail['account_assign_value'],
+                                'client': self.client,
+                                'del_ind': False
+                            }
+                    ):
+                        delete_flag = False
+                        break
 
             delete_flags.append(delete_flag)
-            data = {
-                'delete_flags': delete_flags
-            }
+
+        data = {
+            'delete_flags': delete_flags
+        }
 
         return data
 
