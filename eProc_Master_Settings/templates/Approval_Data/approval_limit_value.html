@@ -564,7 +564,7 @@
                 $("#id_error_msg_alv_code").prop("hidden",false);
                 error_message = ui_messeges("JMSG002")// Get message details
                 var display8 = error_message;
-                document.getElementById("id_error_msg_alv_code").innerHTML = display8+ "Approver limit code";
+                document.getElementById("id_error_msg_alv_code").innerHTML = display8+ " for Approver limit code";
                 $("#id_check_special_character_messages").prop("hidden",false);
                 count = count +1;
             }
@@ -575,7 +575,7 @@
                 $("#id_error_msg_alv_code").prop("hidden",false);
                 error_message = ui_messeges("JMSG003")// Get message details
                 var display4 = error_message;
-                document.getElementById("id_error_msg_alv_code").innerHTML = display4+ "Approval code ID";
+                document.getElementById("id_error_msg_alv_code").innerHTML = display4+ " for Approval code ID";
                 $("#id_check_special_character_messages").prop("hidden",false);
                 count = count +1;
             }
@@ -586,7 +586,7 @@
                 $("#id_error_msg_alv_length").prop("hidden",false);
                 error_message = ui_messeges("JMSG002")// Get message details
                 var display8 = error_message;
-                document.getElementById("id_error_msg_alv_length").innerHTML = display8+ "Approver limit value";
+                document.getElementById("id_error_msg_alv_length").innerHTML = display8+ " for Approver limit value";
                 $("#id_check_special_character_messages").prop("hidden",false);
                 count = count +1;
             }
@@ -625,7 +625,7 @@
                  flag = flag + 1;
             }
             else{
-                $(row.find("TD").eq(2).find('input[type="text"]')).css("border", "none");
+                $(row.find("TD").eq(4).find('input[type="text"]')).css("border", "1px solid #ced4da");
                 row_color_no_highlight(row);
                 $(row).css("border", "");
                 $("#id_delete_duplicate").hide()
@@ -634,17 +634,17 @@
             main_table_low_value.push(alv_compare)
             table_sort_filter_popup_pagination('id_popup_table');
           }
-            if(flag == 0){
+          if(flag == 0){
               $("#id_delete_duplicate").hide()
-            }
-            else{
+          }
+          else{
                 $("#id_delete_duplicate").show()
-            }
-            if(count == 0){
-                $(row.find("TD").eq(1).find('input[type="text"]')).css("border", "none");
+          }
+          if(count == 0){
+                $(row.find("TD").eq(3).find('input[type="text"]')).css("border", "1px solid #ced4da");
                 row_color_no_highlight(row);
                 $(row).css("border", "");
-            }
+          }
         });
         //*************** shows save button if there are no errors(special characters and max length) ***************
          if(count == 0){

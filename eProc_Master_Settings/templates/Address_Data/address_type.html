@@ -633,7 +633,7 @@
                     $("#id_error_msg_date_type").prop("hidden",false);
                     error_message = ui_messeges("JMSG017")// Get message details
                     var display8 = error_message;
-                    document.getElementById("id_error_msg_date_type").innerHTML = display8+ "valid_to";
+                    document.getElementById("id_error_msg_date_type").innerHTML = display8;
                     $("#id_check_special_character_messages").prop("hidden", false);
                     count = count +1;
               }
@@ -662,7 +662,7 @@
                  flag = flag + 1;
             }
             else{
-                $(row.find("TD").eq(2).find('input[type="text"]')).css("border", "none");
+                $(row.find("TD").eq(5).find('input[type="text"]')).css("border", "1px solid #ced4da");
                 row_color_no_highlight(row);
                 $(row).css("border", "");
                 $("#id_delete_duplicate").hide()
@@ -678,7 +678,7 @@
                 $("#id_delete_duplicate").show()
             }
             if(count == 0){
-                $(row.find("TD").eq(1).find('input[type="text"]')).css("border", "none");
+                $(row.find("TD").eq(4).find('input[type="text"]')).css("border", "1px solid #ced4da");
                 row_color_no_highlight(row);
                 $(row).css("border", "");
             }
