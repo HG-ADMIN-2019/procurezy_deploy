@@ -7,12 +7,14 @@ import time
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils import timezone  # Add this line
 import pywhatkit as kit
 from io import TextIOWrapper
 from io import StringIO
 
 from django.views.decorators.csrf import csrf_exempt
+from flask.app import Flask
+
+app = Flask(__name__)
 
 
 def index(request):
@@ -32,6 +34,17 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
             print("Both message and image are missing. Nothing to send.")
             return
 
+        # Get the current time
+        now = datetime.datetime.now()
+
+        # Calculate the delay until the scheduled time
+        delay = (send_time - now).total_seconds()
+
+        # If the scheduled time is in the future, wait until it's time to send
+        if delay > 0:
+            print(f"Waiting for {delay} seconds until the scheduled send time.")
+            time.sleep(delay)
+
         # Send the completed message (either text or image or both)
         if message or image_path:
             kit.sendwhats_image(phone_number, image_path, caption=message)
@@ -40,6 +53,7 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
             time.sleep(5)
 
             print(f"Message sent successfully to {phone_number}")
+
     except Exception as e:
         print(f'Error sending message to {phone_number}: {str(e)}')
         import traceback
@@ -117,4 +131,3 @@ def send_message(request):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
