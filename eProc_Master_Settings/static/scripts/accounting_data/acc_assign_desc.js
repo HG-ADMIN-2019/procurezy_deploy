@@ -171,7 +171,7 @@ function display_basic_db_data() {
 }
 
 //********************************
-function delete_duplicate() {
+ function delete_duplicate() {
     $('#id_popup_table').DataTable().destroy();
     var aad_code_check = new Array
     $("#id_popup_table TBODY TR").each(function () {
@@ -183,28 +183,28 @@ function delete_duplicate() {
         description = (row.find("TD").eq(4).find('input[type="text"]').val()).toUpperCase();
         language_id = row.find("TD").eq(5).find("select option:selected").val();
         var compare = account_assign_value + '-' + account_assign_cat + '-' + company_id + '-' + language_id
-            if (checked_box) {
-              // Keep rows with the checkbox checked
-              del_ind = '1';
-            } else {
-               del_ind = '0';
+        if (checked_box) {
+         // Keep rows with the checkbox checked
+           del_ind = '1';
+        } else {
+             del_ind = '0';
               // Only proceed if account_assign_value and account_assign_cat && company_id && language_id are not empty
-              if (account_assign_value && account_assign_cat && company_id && language_id) {
+             if (account_assign_value && account_assign_cat && company_id && language_id && description) {
                 if (aad_code_check.includes(compare)) {
                     $(row).remove();
                 }
                 aad_code_check.push(compare);
                 main_table_low_value = get_main_table_data_upload(); //Read data from main table
-                    if (main_table_low_value.includes(compare)) {
-                        $(row).remove();
-                    }
-                    main_table_low_value.push(compare);
-              }
-            }
+                if (main_table_low_value.includes(compare)) {
+                     $(row).remove();
+                }
+                main_table_low_value.push(compare);
+             }
+        }
     });
     table_sort_filter_popup_pagination('id_popup_table')
-        check_data()
-}
+    check_data()
+ }
 
 //********************************************
 function delete_invalid_aav() {
@@ -304,7 +304,7 @@ function read_popup_data() {
         main_attribute.account_assign_value = row.find("TD").eq(3).html()
         main_attribute.language_id = row.find("TD").eq(5).html
         main_attribute.del_ind = row.find("TD").eq(7).find('input[type="checkbox"]').is(':checked');
-        var compare_maintable = main_attribute.account_assign_value+'-'+main_attribute.account_assign_cat+'-'+main_attribute.company_id+'-'+main_attribute.language_id+'-'+main_attribute.del_ind;
+        var compare_maintable = main_attribute.account_assign_value+'-'+main_attribute.account_assign_cat+'-'+main_attribute.company_id+'-'+main_attribute.language_id;
         main_table_low_value.push(compare_maintable);
     });
     table_sort_filter('display_basic_table');
