@@ -1,0 +1,6 @@
+Date: 8/12/2023
+Time: 15:30
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
