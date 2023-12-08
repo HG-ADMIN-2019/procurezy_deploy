@@ -197,72 +197,64 @@ def check_acc_assign_desc_data(ui_data, status):
     dependent_count = 0
     valid_data_list = []
     for acc_desc in ui_data:
-        # dependent check
-        if django_query_instance.django_existence_check(AccountingData,
-                                                        {'del_ind': False,
-                                                         'account_assign_value': acc_desc['account_assign_value']}):
-            # check for deletion of record
-            if acc_desc['del_ind'] in ['1', True]:
-                if status == 'SAVE':
-                    if django_query_instance.django_existence_check(AccountingDataDesc,
-                                                                    {'client': global_variables.GLOBAL_CLIENT,
-                                                                     'account_assign_value': acc_desc[
-                                                                         'account_assign_value'],
-                                                                     'company_id': acc_desc['company_id'],
-                                                                     'account_assign_cat': acc_desc[
-                                                                         'account_assign_cat'],
-                                                                     'language_id': acc_desc['language_id']}):
-                        delete_count = delete_count + 1
-                        valid_data_list.append(acc_desc)
-                else:
-                    if django_query_instance.django_existence_check(AccountingDataDesc,
-                                                                    {'del_ind': False,
-                                                                     'client': global_variables.GLOBAL_CLIENT,
-                                                                     'account_assign_value': acc_desc[
-                                                                         'account_assign_value'],
-                                                                     'company_id': acc_desc['company_id'],
-                                                                     'account_assign_cat': acc_desc[
-                                                                         'account_assign_cat'],
-                                                                     'language_id': acc_desc['language_id']}):
-                        delete_count = delete_count + 1
-                        valid_data_list.append(acc_desc)
-                    else:
-                        # if del is set but record is not found in db then it is consider as invalid count
-                        invalid_count = invalid_count + 1
-                        valid_data_list.append(acc_desc)
+        # check for deletion of record
+        if acc_desc['del_ind'] in ['1', True]:
+            if status == 'SAVE':
+                if django_query_instance.django_existence_check(AccountingDataDesc,
+                                                                {'client': global_variables.GLOBAL_CLIENT,
+                                                                 'account_assign_value': acc_desc[
+                                                                     'account_assign_value'],
+                                                                 'company_id': acc_desc['company_id'],
+                                                                 'account_assign_cat': acc_desc[
+                                                                     'account_assign_cat'],
+                                                                 'language_id': acc_desc['language_id']}):
+                    delete_count = delete_count + 1
+                    valid_data_list.append(acc_desc)
             else:
-                # duplicate check
                 if django_query_instance.django_existence_check(AccountingDataDesc,
                                                                 {'del_ind': False,
                                                                  'client': global_variables.GLOBAL_CLIENT,
                                                                  'account_assign_value': acc_desc[
                                                                      'account_assign_value'],
-                                                                 'description': acc_desc['description'],
                                                                  'company_id': acc_desc['company_id'],
-                                                                 'account_assign_cat': acc_desc['account_assign_cat'],
+                                                                 'account_assign_cat': acc_desc[
+                                                                     'account_assign_cat'],
                                                                  'language_id': acc_desc['language_id']}):
-                    duplicate_count = duplicate_count + 1
-                # update check
-                elif django_query_instance.django_existence_check(AccountingDataDesc,
-                                                                  {'del_ind': False,
-                                                                   'client': global_variables.GLOBAL_CLIENT,
-                                                                   'account_assign_value': acc_desc[
-                                                                       'account_assign_value'],
-                                                                   'company_id': acc_desc['company_id'],
-                                                                   'account_assign_cat': acc_desc[
-                                                                       'account_assign_cat'],
-                                                                   'language_id': acc_desc['language_id']}):
-                    update_count = update_count + 1
+                    delete_count = delete_count + 1
                     valid_data_list.append(acc_desc)
                 else:
-                    # insert check
-                    insert_count = insert_count + 1
+                    # if del is set but record is not found in db then it is consider as invalid count
+                    invalid_count = invalid_count + 1
                     valid_data_list.append(acc_desc)
         else:
-            print(acc_desc['account_assign_value'])
-            dependent_count = dependent_count + 1
+            # duplicate check
+            if django_query_instance.django_existence_check(AccountingDataDesc,
+                                                            {'del_ind': False,
+                                                             'client': global_variables.GLOBAL_CLIENT,
+                                                             'account_assign_value': acc_desc[
+                                                                 'account_assign_value'],
+                                                             'description': acc_desc['description'],
+                                                             'company_id': acc_desc['company_id'],
+                                                             'account_assign_cat': acc_desc['account_assign_cat'],
+                                                             'language_id': acc_desc['language_id']}):
+                duplicate_count = duplicate_count + 1
+            # update check
+            elif django_query_instance.django_existence_check(AccountingDataDesc,
+                                                              {'del_ind': False,
+                                                               'client': global_variables.GLOBAL_CLIENT,
+                                                               'account_assign_value': acc_desc[
+                                                                   'account_assign_value'],
+                                                               'company_id': acc_desc['company_id'],
+                                                               'account_assign_cat': acc_desc[
+                                                                   'account_assign_cat'],
+                                                               'language_id': acc_desc['language_id']}):
+                update_count = update_count + 1
+                valid_data_list.append(acc_desc)
+            else:
+                # insert check
+                insert_count = insert_count + 1
+                valid_data_list.append(acc_desc)
 
-        print("desc ", acc_desc)
     # append message with count
     message_count_dic = {'file_count': file_count, 'delete_count': delete_count, 'invalid_count': invalid_count,
                          'duplicate_count': duplicate_count, 'update_count': update_count,
