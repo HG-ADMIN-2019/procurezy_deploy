@@ -14,6 +14,7 @@
             <div class="card-body">
                  <form method="POST">
                     {% csrf_token %}
+                  <div id="error_msg" class="alert alert-danger display-none" role="alert"><span id="error_message_search"></span></div>
                  <div class="row">
                     <div class="col-md">
                         <label for="">SC Number</label>
@@ -213,8 +214,24 @@ function reload(){
       localStorage.setItem("company_code", document.getElementById("company_code").value);
       localStorage.setItem("from_date", document.getElementById("from_date").value);
       localStorage.setItem("to_date", document.getElementById("to_date").value);
-      OpenLoaderPopup();
   }
+  $('form').on('submit',function (e) {
+        OpenLoaderPopup();
+        var valid = true;
+        var ccode = document.getElementById("company_code").value;
+      if((ccode == '')||(ccode == null)){
+            $('#error_msg').show();
+            document.getElementById("error_message_search").innerHTML = "Please enter Company number";
+            valid = false;
+      }
+        if(!valid){
+            localStorage.setItem("error_flag", 1);
+            e.preventDefault();
+            setTimeout(function() {
+                       CloseLoaderPopup();
+         }, 500);
+        }
+    });
 
 function po_generate(){
     if($('.generate_po').is(':checked')){

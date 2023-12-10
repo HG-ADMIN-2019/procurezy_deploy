@@ -53,7 +53,6 @@ def proj_user_search(request):
         'project_id': project_id,
         'messages_list': messages_list,
         'is_slide_menu': True,
-        'is_timesheet_active': True
     }
 
     return render(request, 'create_project/enter_project_categories.html', context)

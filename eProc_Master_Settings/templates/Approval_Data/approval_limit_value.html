@@ -309,6 +309,7 @@
     //onclick of data Upload copy data to modal pop-up
     function onclick_display_csv_data() {
         $("#valid_upload").modal('hide');
+        $("#id_delete_duplicate").hide()
         $("#id_check_success_messages").empty();
         $("#id_check_error_messages").empty();
         $("#id_check_success_messages").prop("hidden", true);
@@ -451,11 +452,11 @@
         else{
             if ((GLOBAL_ACTION == "COPY") || (GLOBAL_ACTION == "ADD")) {
                 // compare main table and pop up for duplicate values
-            [no_duplicate_entries,error_message] = maintable_validation(validate_add_attributes, main_table_low_value)
-            if(no_duplicate_entries == 'N'){
+              [no_duplicate_entries,error_message] = maintable_validation(validate_add_attributes, main_table_low_value)
+              if(no_duplicate_entries == 'N'){
                 $('#applimit_value_Modal').modal('show');
+              }
             }
-        }
             if ((no_duplicate_value == 'Y') && (no_duplicate_entries == 'Y')) {
                 var add_basic_data = '';
                 var alv_data_array = alv_data;
@@ -513,8 +514,9 @@
         });
     }
 
-    //check function restricting special char and diaplay the data count of csv file
-    function check_data() {
+     //check function restricting special char and diaplay the data count of csv file
+     function check_data() {
+        $("#id_delete_duplicate").hide()
         $('#id_popup_table').DataTable().destroy();
         $("#id_check_success_messages").empty()
         $("#id_check_error_messages").empty()
@@ -525,6 +527,7 @@
         document.getElementById("id_error_msg_alv_name").innerHTML = "";
         document.getElementById("id_error_msg_alv_length").innerHTML = "";
         count = 0;
+        flag = 0;
         var alv_array = new Array
         var DB_array = new Array
         var alv_list = new Array
@@ -536,14 +539,14 @@
              $('#id_popup_table').DataTable().destroy();
             var row = $(this);
             applimit_value_dic = {}
-            //*************** reading data from the pop-up ***************
+            //************* reading data from the pop-up *************
             applimit_value_dic.app_code_id = row.find("TD").eq(3).find('input[type="text"]').val().toUpperCase();
             applimit_value_dic.company_id = row.find("TD").eq(1).find("select option:selected").val();
             applimit_value_dic.app_types = row.find("TD").eq(2).find("select option:selected").val();
             applimit_value_dic.currency_id = row.find("TD").eq(5).find("select option:selected").val();
             applimit_value_dic.upper_limit_value = row.find("TD").eq(4).find('input[type="number"]').val().toUpperCase();
             applimit_value_dic.app_lim_dec_guid = row.find("TD").eq(6).find('input[type="text"]').val().toUpperCase()
-            alv_compare = applimit_value_dic.app_code_id +'-'+ applimit_value_dic.app_types +'-'+ applimit_value_dic.company_id
+            alv_compare = applimit_value_dic.app_code_id +'-'+ applimit_value_dic.company_id +'-'+ applimit_value_dic.app_types +'-'+ applimit_value_dic.currency_id
             checked_box = row.find("TD").eq(7).find('input[type="checkbox"]').is(':checked')
             if (checked_box) {
                 applimit_value_dic.del_ind = '1'
@@ -553,40 +556,51 @@
             alv_list.push(applimit_value_dic)
             get_main_table_data();
              var format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-            //*************** checking for empty records for product id name (max length = 2) ***************
-            if(applimit_value_dic.app_code_id.length == 0){
-                $(row.find("TD").eq(1).find('input[type="text"]')).css("border", "1px solid #FF0000");
+          if(applimit_value_dic.del_ind == '0'){
+            //************* checking for empty records for product id name (max length = 2) *************
+            if(applimit_value_dic.app_code_id.length == 0 || /\s/.test(applimit_value_dic.app_code_id)){
+                $(row.find("TD").eq(3).find('input[type="text"]')).css("border", "1px solid #FF0000");
                 row_color_highlight_empty(row);
-                $("#id_error_msg_prod_cat_desc").prop("hidden",false);
+                $("#id_error_msg_alv_code").prop("hidden",false);
                 error_message = ui_messeges("JMSG002")// Get message details
                 var display8 = error_message;
-                document.getElementById("id_error_msg_prod_cat_desc").innerHTML = display8+ "Country Name";
+                document.getElementById("id_error_msg_alv_code").innerHTML = display8+ " for Approver limit code";
                 $("#id_check_special_character_messages").prop("hidden",false);
                 count = count +1;
             }
-            //*************** checking for special characters for app_limlit  ***************
+             //************** checking for special characters for product id name **************
             else if(format.test(applimit_value_dic.app_code_id)){
-                $(row.find("TD").eq(2).find('input[type="text"]')).css("border", "1px solid #FF0000");
+                $(row.find("TD").eq(3).find('input[type="text"]')).css("border", "1px solid #FF0000");
                 row_color_highlight_special(row);
-                $("#id_error_msg_language_id").prop("hidden",false);
+                $("#id_error_msg_alv_code").prop("hidden",false);
                 error_message = ui_messeges("JMSG003")// Get message details
-                var display3 = error_message;
-                document.getElementById("id_error_msg_language_id").innerHTML = display3+ "Country Name";
+                var display4 = error_message;
+                document.getElementById("id_error_msg_alv_code").innerHTML = display4+ " for Approval code ID";
                 $("#id_check_special_character_messages").prop("hidden",false);
                 count = count +1;
             }
-            else if(alv_code_check.includes((applimit_value_dic.app_code_id)&&(applimit_value_dic.del_ind))){
-                 $(row).css("border", "#f8d7da");
-                 row_color_highlight(row);
-                 $("#id_check_error_messages").prop("hidden",false);
-                 var display7 = ui_messeges("JMSG001");
-                 document.getElementById("id_check_error_messages").innerHTML = display7;
-                 $("#save_id").prop("hidden", true);
-                 $("#id_delete_duplicate").show()
-                 $("#id_check_data").prop("hidden", false);
-                 count = count +1;
+            //************* checking for special characters for app_limlit  *************
+            else if(applimit_value_dic.upper_limit_value.length == 0 || /\s/.test(applimit_value_dic.upper_limit_value)){
+                $(row.find("TD").eq(4).find('input[type="text"]')).css("border", "1px solid #FF0000");
+                row_color_highlight_special(row);
+                $("#id_error_msg_alv_length").prop("hidden",false);
+                error_message = ui_messeges("JMSG002")// Get message details
+                var display8 = error_message;
+                document.getElementById("id_error_msg_alv_length").innerHTML = display8+ " for Approver limit value";
+                $("#id_check_special_character_messages").prop("hidden",false);
+                count = count +1;
             }
-            else if(main_table_low_value.includes((applimit_value_dic.app_code_id)&&(applimit_value_dic.del_ind))){
+            else if(applimit_value_dic.upper_limit_value == 0){
+                $(row.find("TD").eq(4).find('input[type="text"]')).css("border", "1px solid #FF0000");
+                row_color_highlight_special(row);
+                $("#id_error_msg_alv_length").prop("hidden",false);
+                error_message = ui_messeges("JMSG002")// Get message details
+                var display8 = error_message;
+                document.getElementById("id_error_msg_alv_length").innerHTML = display8+ " for Approver limit value";
+                $("#id_check_special_character_messages").prop("hidden",false);
+                count = count +1;
+            }
+            else if(alv_code_check.includes(alv_compare)){
                  $(row).css("border", "#f8d7da");
                  row_color_highlight(row);
                  $("#id_check_error_messages").prop("hidden",false);
@@ -596,20 +610,45 @@
                  $("#id_delete_duplicate").show()
                  $("#id_check_data").prop("hidden", false);
                  count = count +1;
+                 flag = flag + 1;
+            }
+            else if(main_table_low_value.includes(alv_compare)){
+                 $(row).css("border", "#f8d7da");
+                 row_color_highlight(row);
+                 $("#id_check_error_messages").prop("hidden",false);
+                 var display7 = ui_messeges("JMSG001");
+                 document.getElementById("id_check_error_messages").innerHTML = display7;
+                 $("#save_id").prop("hidden", true);
+                 $("#id_delete_duplicate").show()
+                 $("#id_check_data").prop("hidden", false);
+                 count = count +1;
+                 flag = flag + 1;
             }
             else{
-                $(row.find("TD").eq(2).find('input[type="text"]')).css("border", "none");
+                $(row.find("TD").eq(4).find('input[type="text"]')).css("border", "1px solid #ced4da");
                 row_color_no_highlight(row);
                 $(row).css("border", "");
                 $("#id_delete_duplicate").hide()
             }
-            alv_code_check.push(applimit_value_dic.app_code_id)
-            main_table_low_value.push(applimit_value_dic.app_code_id)
+            alv_code_check.push(alv_compare)
+            main_table_low_value.push(alv_compare)
             table_sort_filter_popup_pagination('id_popup_table');
+          }
+          if(flag == 0){
+              $("#id_delete_duplicate").hide()
+          }
+          else{
+                $("#id_delete_duplicate").show()
+          }
+          if(count == 0){
+                $(row.find("TD").eq(3).find('input[type="text"]')).css("border", "1px solid #ced4da");
+                row_color_no_highlight(row);
+                $(row).css("border", "");
+          }
         });
-
         //*************** shows save button if there are no errors(special characters and max length) ***************
          if(count == 0){
+            $("#id_delete_duplicate").hide()
             $('#id_popup_table').DataTable().destroy();
             $("#id_popup_table").find("input,button,textarea,select").attr("disabled", "disabled");
             document.getElementById("id_del_add_button").style.display = "none";
