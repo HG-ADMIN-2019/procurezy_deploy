@@ -52,3 +52,21 @@ Phone Number: +917676010274
 Image: D:\procurezy_deploy\media\image.jpg
 Caption: Hello this is a test message
 --------------------
+Date: 10/12/2023
+Time: 7:59
+Phone Number: +917676010274
+Image: C:\Users\HG PC 1\Desktop\procurezy_deploy\media\image.jpg
+Caption: Hello Good Morning
+--------------------
+Date: 10/12/2023
+Time: 8:1
+Phone Number: +917676010274
+Image: C:\Users\HG PC 1\Desktop\procurezy_deploy\media\image.jpg
+Caption: Hello Good Morning
+--------------------
+Date: 10/12/2023
+Time: 8:4
+Phone Number: +917676010274
+Image: C:\Users\HG PC 1\Desktop\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
