@@ -86,7 +86,8 @@ button:hover {
 // script.js
 function scheduleAndSend() {
     console.log('scheduleAndSend function called.');
-    var message = document.getElementById('message').value;
+    var messageInput = document.getElementById('message');
+    var message = messageInput.value;
     var hours = document.getElementById('hours').value;
     var minutes = document.getElementById('minutes').value;
     var csvFile = document.getElementById('csv').files[0];
@@ -95,6 +96,13 @@ function scheduleAndSend() {
     // Ensure CSV file is selected before proceeding
     if (!csvFile) {
         alert("Please select a CSV file.");
+        return;
+    }
+
+    // Validate message input
+    if (!isValidMessage(message)) {
+        alert("Please enter a valid message with only alphabetical characters and spaces.");
+        messageInput.focus();
         return;
     }
 
@@ -125,6 +133,23 @@ function scheduleAndSend() {
         console.error('Error:', error);
     });
 }
+
+// Function to validate the message input
+function isValidMessage(message) {
+    // Use a regular expression to allow alphabetical characters and spaces
+    var regex = /^[a-zA-Z\s]+$/;
+    return regex.test(message);
+}
+
+// Add event listener to prevent typing numbers and special characters
+document.getElementById('message').addEventListener('input', function(event) {
+    var input = event.target;
+    var sanitizedInput = input.value.replace(/[^a-zA-Z\s]/g, ''); // Remove non-alphabetical characters and non-space characters
+    if (input.value !== sanitizedInput) {
+        input.value = sanitizedInput;
+    }
+});
+
 
 // Function to get CSRF cookie
 function getCookie(name) {

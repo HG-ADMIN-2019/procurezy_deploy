@@ -213,14 +213,14 @@
                     </div>
                     {% endif %}
                 </li>
-<!--                <li class="nav-item" id="nav-item__effort">-->
-<!--                    {% if sub_menu.EFFORTS %}-->
-<!--                    {% url 'eProc_Time_Sheet:get_project_details'  as time_sheet_url %}-->
-<!--                    <div class="nav-link" id="effort_btn">-->
-<!--                        <a href="{{time_sheet_url}}" {% if request.path == time_sheet_url %} class="active"{% endif %} >config</a>-->
-<!--                    </div>-->
-<!--                    {% endif %}-->
-<!--                </li>-->
+                <li class="nav-item active" id="nav-item__marketing">
+                    {% if sub_menu.SEND_MESSAGE %}
+                    {% url 'eProc_Marketing:index'  as marketing_url %}
+                    <div class="nav-link" id="whatsapp_btn">
+                        <a href="{{marketing_url}}" {% if request.path == marketing_url %} class="active"{% endif %} > Config</a>
+                    </div>
+                    {% endif %}
+                </li>
 
             </ul>
         </div>
