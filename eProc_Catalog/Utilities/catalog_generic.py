@@ -124,9 +124,13 @@ class CatalogGenericMethods:
                 catalog_supp_list = list(get_cat.values_list('supplier_id', flat=True))
                 unique_supp_list = set(list(get_cat.values_list('supplier_id', flat=True).distinct()))
         else:
-            catalog_supp_list = list(assigned_free_texts_querry_set.values_list('supplier_id', flat=True))
-            unique_supp_list = set(
-                list(assigned_free_texts_querry_set.values_list('supplier_id', flat=True).distinct()))
+            if assigned_free_texts_querry_set:
+                catalog_supp_list = list(assigned_free_texts_querry_set.values_list('supplier_id', flat=True))
+                unique_supp_list = set(
+                    list(assigned_free_texts_querry_set.values_list('supplier_id', flat=True).distinct()))
+            else:
+                catalog_supp_list = []
+                unique_supp_list = set()
         supp_id_count = list_value_count(catalog_supp_list)
         supp_id_desc_count = get_supp_desc_count(supp_id_count)
         total_supp = len(list(dict.fromkeys(unique_supp_list)))
@@ -170,8 +174,13 @@ class CatalogGenericMethods:
                 catalog_prod_cat_list = list(get_cat.values_list('prod_cat_id', flat=True))
                 unique_prod_cat_list = list(get_cat.values_list('prod_cat_id', flat=True).distinct())
         else:
-            catalog_prod_cat_list = list(assigned_free_texts_querry_set.values_list('prod_cat_id', flat=True))
-            unique_prod_cat_list = list(assigned_free_texts_querry_set.values_list('prod_cat_id', flat=True).distinct())
+            if assigned_free_texts_querry_set:
+                catalog_prod_cat_list = list(assigned_free_texts_querry_set.values_list('prod_cat_id', flat=True))
+                unique_prod_cat_list = set(
+                    list(assigned_free_texts_querry_set.values_list('prod_cat_id', flat=True).distinct()))
+            else:
+                catalog_prod_cat_list = []
+                unique_prod_cat_list = set()
         prod_cat_count = list_value_count(catalog_prod_cat_list)
         prod_cat_info = get_prod_cat_desc_count(prod_cat_count)
         total_prod_count = len(list(dict.fromkeys(unique_prod_cat_list)))
