@@ -834,11 +834,36 @@ function new_row_data() {
                     '<td><select  id="language_dropdw" class="form-control">' + language_dropdwn + '</select></td>'+
                     '<td hidden><input value="GUID" hidden></td>'+
                     '<td class="class_del_checkbox"><input class="input" type="checkbox" required></td></tr>';
-
                     $('#id_popup_tbody').append(basic_add_new_html);
                     $(".class_del_checkbox").prop("hidden", false);
                     $("#id_del_ind_checkbox").prop("hidden", false);
-                    CloseLoaderPopup();
+                                    table_sort_filter('id_popup_table');
+                   var company_num = '';
+                $("#id_popup_table TBODY TR").each(function () {
+                    var row = $(this);
+                    row.find("TD").eq(2).find("select").empty()
+                    row.find("TD").eq(3).find("select").empty()
+                    company_num = row.find("TD").eq(1).find("select option:selected").val();
+                    var assign_val = account_assignment_value_find(company_num)
+                    row.find("TD").eq(2).find("select").append(assign_val.acc_ass_dropdwn)
+                    row.find("TD").eq(3).find("select").append(assign_val.acc_ass_val_dropdwn)
+                    $(row.find("TD").eq(1).find("select")).change(function () {
+                        company_dropdwn_change(row);
+                    })
+                    $(row.find("TD").eq(2).find("select")).change(function () {
+                        company_num = row.find("TD").eq(1).find("select option:selected").val();
+                        acc_ass_cat_dropdwn(row,company_num);
+                    })
+<!--                    $(row.find("TD").eq(3).find("select")).change(function () {-->
+<!--                        supcompany_dropdwn_change(row);-->
+<!--                    })-->
+<!--                    $(row.find("TD").eq(2).find("select")).change(function () {-->
+<!--                        company_num = row.find("TD").eq(1).find("select option:selected").val();-->
+<!--                        sup_acc_ass_cat_dropdwn(row,company_num);-->
+<!--                    })-->
+                })
+                CloseLoaderPopup();
+
                 }
             });
         }
@@ -847,8 +872,31 @@ function new_row_data() {
             new_row_data();   // Add a new row in popup
             table_sort_filter('id_popup_table');
         }
-         $('#delete_data').hide()
-       }
+        var company_num = '';
+        $("#id_popup_table TBODY TR").each(function () {
+            var row = $(this);
+            row.find("TD").eq(2).find("select").empty()
+            row.find("TD").eq(3).find("select").empty()
+            company_num = row.find("TD").eq(1).find("select option:selected").val();
+            var assign_val = account_assignment_value_find(company_num)
+            row.find("TD").eq(2).find("select").append(assign_val.acc_ass_dropdwn)
+            row.find("TD").eq(3).find("select").append(assign_val.acc_ass_val_dropdwn)
+            $(row.find("TD").eq(1).find("select")).change(function () {
+                company_dropdwn_change(row);
+            })
+            $(row.find("TD").eq(2).find("select")).change(function () {
+                company_num = row.find("TD").eq(1).find("select option:selected").val();
+                acc_ass_cat_dropdwn(row,company_num);
+            })
+<!--            $(row.find("TD").eq(3).find("select")).change(function () {-->
+<!--                supcompany_dropdwn_change(row);-->
+<!--            })-->
+<!--            $(row.find("TD").eq(2).find("select")).change(function () {-->
+<!--                company_num = row.find("TD").eq(1).find("select option:selected").val();-->
+<!--                sup_acc_ass_cat_dropdwn(row,company_num);-->
+<!--            })-->
+        })
+    }
 
     //*******************************************
     function onclick_copy_update_button() {

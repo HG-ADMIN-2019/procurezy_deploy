@@ -128,7 +128,13 @@ function get_acct_assmt_val(rowid){
     acct_cat = row[0].value;
     row[0].parentNode.nextElementSibling.childNodes[0].innerHTML = '';
     var acct_cat_val = account_assignment_cat(acct_cat.company_num)
-    row[0].parentNode.nextElementSibling.childNodes[0].innerHTML = acct_cat_val.acc_ass_val_dropdwn;
+    row[0].parentNode.nextElementSibling.childNodes[0].innerHTML = acct_cat.acc_ass_val_dropdwn;
+}
+function acc_ass_cat_dropdwn(row,company_num){
+    acct_cat = row.find("TD").eq(2).find("select option:selected").val();
+    row.find("TD").eq(3).find("select").empty();
+    var acct_cat_val = account_assignment_cat(acct_cat,company_num)
+    row.find("TD").eq(3).find("select").append(acct_cat_val.acc_ass_val_dropdwn)
 }
 
 //onclick of cancel empty the popup table body and error messages
@@ -317,7 +323,7 @@ function read_popup_data() {
     table_sort_filter('display_basic_table');
     return main_table_low_value
  }
- 
+
  // Function to get the selected row data
  function get_selected_row_data() {
     $("#display_basic_table TBODY TR").each(function() {
