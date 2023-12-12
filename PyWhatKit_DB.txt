@@ -1,0 +1,72 @@
+Date: 8/12/2023
+Time: 15:30
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:22
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:24
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:24
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:33
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:46
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:50
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:55
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 8/12/2023
+Time: 17:56
+Phone Number: +917676010274
+Image: D:\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
+Date: 10/12/2023
+Time: 7:59
+Phone Number: +917676010274
+Image: C:\Users\HG PC 1\Desktop\procurezy_deploy\media\image.jpg
+Caption: Hello Good Morning
+--------------------
+Date: 10/12/2023
+Time: 8:1
+Phone Number: +917676010274
+Image: C:\Users\HG PC 1\Desktop\procurezy_deploy\media\image.jpg
+Caption: Hello Good Morning
+--------------------
+Date: 10/12/2023
+Time: 8:4
+Phone Number: +917676010274
+Image: C:\Users\HG PC 1\Desktop\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------

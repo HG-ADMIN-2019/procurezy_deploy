@@ -245,7 +245,7 @@
          assign_val = account_assignment_value_find(company_num);
     }
 
-     // Function for add a new row data
+    // Function for add a new row data
 function new_row_data() {
     acc_value_desc_dropdown();
     basic_add_new_html = '<tr> <td><input class="input" type="checkbox" required></td>'+
@@ -372,10 +372,10 @@ function new_row_data() {
                                     language_id_list = language + language_list
                                 });
                                 if(account_assign_array.includes(value.account_assign_value)){
-                                    edit_basic_data += '<tr ><td><input class="input" type="checkbox" required></td><td><select class="form-control">value ="' + value.company_id + '"'+company_id_list+'</select></td><td><select  class="form-control" id="acc_ass_dropdwn"></select></td><td><select  class="form-control" id="acc_ass_val_dropdw">value ="' + value.account_assign_value + '"'+assignment_value_id_list+' </select></td><td><input class="form-control" type="text" value="' + value.description + '"  maxlength="255" onkeypress="return /[a-z ]/i.test(event.key)" style="text-transform:uppercase" </td><td><select class="form-control" type="text"><option value ="' + value.language_id + '"'+language_id_list+'>'+value.language_id+'</option></select></td><td hidden><input class="form-control" type="text" value="" ></td><td input class="input" type="checkbox">' + del_ind + '</td></tr>';
+                                    edit_basic_data += '<tr ><td><input class="input" type="checkbox" required></td><td><select class="form-control">value ="' + value.company_id + '"'+company_id_list+'</select></td><td><select  class="form-control" id="acc_ass_dropdwn"></select></td><td><select  class="form-control" id="acc_ass_val_dropdw">value ="' + value.account_assign_value + '"'+assignment_value_id_list+' </select></td><td><input class="form-control" type="text" value="' + value.description + '"  maxlength="255" onkeypress="return /[a-z ]/i.test(event.key)" style="text-transform:uppercase" </td><td><select class="form-control" type="text"><option value ="' + value.language_id + '"'+language_id_list+'>'+value.language_id+'</option></select></td><td hidden><input class="form-control" type="text" value="" ></td><td input class="input" type="checkbox">' + del_ind + '</td><td hidden>1</td></tr>';
                                 }
                                 else{
-                                    edit_basic_data += '<tr ><td><input class="input" type="checkbox"  required></td><td><select class="form-control">value ="' + value.company_id + '"'+company_id_list+'</select></td><td><select class="form-control">value ="' + value.account_assign_cat + '"' + aac_data_id_list + ' </select></td><td><select  class="form-control" id="acc_ass_val_dropdw">value ="' + value.account_assign_value + '"'+assignment_value_id_list+'</select></td><td><input class="form-control" type="text" value="' + value.description + '"  maxlength="255" onkeypress="return /[a-z ]/i.test(event.key)" style="text-transform:uppercase" </td><td><select class="form-control" type="text"><option value ="' + value.language_id + '"language_id_list>'+value.language_id+'</option></select></td><td hidden><input class="form-control" type="text" value="" ></td><td input class="input" type="checkbox">' + del_ind + '</td></tr>';
+                                    edit_basic_data += '<tr ><td><input class="input" type="checkbox"  required></td><td><select class="form-control">value ="' + value.company_id + '"'+company_id_list+'</select></td><td><select class="form-control">value ="' + value.account_assign_cat + '"' + aac_data_id_list + ' </select></td><td><select  class="form-control" id="acc_ass_val_dropdw">value ="' + value.account_assign_value + '"'+assignment_value_id_list+'</select></td><td><input class="form-control" type="text" value="' + value.description + '"  maxlength="255" onkeypress="return /[a-z ]/i.test(event.key)" style="text-transform:uppercase" </td><td><select class="form-control" type="text"><option value ="' + value.language_id + '"language_id_list>'+value.language_id+'</option></select></td><td hidden><input class="form-control" type="text" value="" ></td><td input class="input" type="checkbox">' + del_ind + '</td><td hidden>0</td></tr>';
                                     invalid_acc_assn.push(value.account_assign_value)
                                 }
                             });
@@ -535,7 +535,7 @@ function new_row_data() {
                 }
                 CloseLoaderPopup();
                 $('#id_popup_tbody').append(edit_basic_data);
-                $("#id_del_ind_checkbox").prop("hidden", false);
+                $("#id_del_ind_checkbox").prop("hidden", true);
                 $('#Acc_desc_Modal').modal('show');
                 table_sort_filter('id_popup_table');
             },
@@ -549,11 +549,11 @@ function new_row_data() {
         GLOBAL_ACTION = 'DELETE'
         main_table_checked = [];
         $('#display_basic_table').DataTable().destroy();
-        get_row_data("#id_popup_table");
+        get_row_data("#id_popup_table"); // Function call to get the selected row data
         $('#id_delete_confirm_popup').modal('hide');
-        data = {'data':main_table_checked,'table_name':'AccountingDataDesc','action':GLOBAL_ACTION}
-        OpenLoaderPopup();
-        $.ajax({
+            data = {'data':main_table_checked,'table_name':'AccountingDataDesc','action':GLOBAL_ACTION}
+            OpenLoaderPopup();
+            $.ajax({
             type: 'POST',
             url: "{% url 'eProc_Master_Settings:create_update_master_data' %}",
             data: JSON.stringify(data),
@@ -834,11 +834,36 @@ function new_row_data() {
                     '<td><select  id="language_dropdw" class="form-control">' + language_dropdwn + '</select></td>'+
                     '<td hidden><input value="GUID" hidden></td>'+
                     '<td class="class_del_checkbox"><input class="input" type="checkbox" required></td></tr>';
-
                     $('#id_popup_tbody').append(basic_add_new_html);
                     $(".class_del_checkbox").prop("hidden", false);
                     $("#id_del_ind_checkbox").prop("hidden", false);
-                    CloseLoaderPopup();
+                                    table_sort_filter('id_popup_table');
+                   var company_num = '';
+                $("#id_popup_table TBODY TR").each(function () {
+                    var row = $(this);
+                    row.find("TD").eq(2).find("select").empty()
+                    row.find("TD").eq(3).find("select").empty()
+                    company_num = row.find("TD").eq(1).find("select option:selected").val();
+                    var assign_val = account_assignment_value_find(company_num)
+                    row.find("TD").eq(2).find("select").append(assign_val.acc_ass_dropdwn)
+                    row.find("TD").eq(3).find("select").append(assign_val.acc_ass_val_dropdwn)
+                    $(row.find("TD").eq(1).find("select")).change(function () {
+                        company_dropdwn_change(row);
+                    })
+                    $(row.find("TD").eq(2).find("select")).change(function () {
+                        company_num = row.find("TD").eq(1).find("select option:selected").val();
+                        acc_ass_cat_dropdwn(row,company_num);
+                    })
+<!--                    $(row.find("TD").eq(3).find("select")).change(function () {-->
+<!--                        supcompany_dropdwn_change(row);-->
+<!--                    })-->
+<!--                    $(row.find("TD").eq(2).find("select")).change(function () {-->
+<!--                        company_num = row.find("TD").eq(1).find("select option:selected").val();-->
+<!--                        sup_acc_ass_cat_dropdwn(row,company_num);-->
+<!--                    })-->
+                })
+                CloseLoaderPopup();
+
                 }
             });
         }
@@ -847,8 +872,31 @@ function new_row_data() {
             new_row_data();   // Add a new row in popup
             table_sort_filter('id_popup_table');
         }
-         $('#delete_data').hide()
-       }
+        var company_num = '';
+        $("#id_popup_table TBODY TR").each(function () {
+            var row = $(this);
+            row.find("TD").eq(2).find("select").empty()
+            row.find("TD").eq(3).find("select").empty()
+            company_num = row.find("TD").eq(1).find("select option:selected").val();
+            var assign_val = account_assignment_value_find(company_num)
+            row.find("TD").eq(2).find("select").append(assign_val.acc_ass_dropdwn)
+            row.find("TD").eq(3).find("select").append(assign_val.acc_ass_val_dropdwn)
+            $(row.find("TD").eq(1).find("select")).change(function () {
+                company_dropdwn_change(row);
+            })
+            $(row.find("TD").eq(2).find("select")).change(function () {
+                company_num = row.find("TD").eq(1).find("select option:selected").val();
+                acc_ass_cat_dropdwn(row,company_num);
+            })
+<!--            $(row.find("TD").eq(3).find("select")).change(function () {-->
+<!--                supcompany_dropdwn_change(row);-->
+<!--            })-->
+<!--            $(row.find("TD").eq(2).find("select")).change(function () {-->
+<!--                company_num = row.find("TD").eq(1).find("select option:selected").val();-->
+<!--                sup_acc_ass_cat_dropdwn(row,company_num);-->
+<!--            })-->
+        })
+    }
 
     //*******************************************
     function onclick_copy_update_button() {
