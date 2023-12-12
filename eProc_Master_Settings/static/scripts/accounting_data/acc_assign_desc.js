@@ -16,14 +16,15 @@ function account_assignment_value_find(company_num) {
     corresponding_values.acc_ass_val_dropdwn = '';
     corresponding_values.other_dropdn = '';
     company_list = company_list;
-    unique_acct_cat= [];
+    unique_acct_cat = [];
     unique_acct_assmt_val = [];
     for (var i = 0; i < company_list.length; i++) {
-        compare_dict = {};
         compare_dict = company_list[i]
         if (company_num == compare_dict.company_id) {
             unique_acct_cat.push(compare_dict.account_assign_cat);
-            unique_acct_assmt_val.push(compare_dict.account_assign_value);
+            if (compare_dict.account_assign_cat === 'GLACC') {
+                unique_acct_assmt_val.push(compare_dict.account_assign_value);
+            }
         }
     }
      for (var i = 0; i < arrDistinct.length; i++) {
@@ -115,12 +116,18 @@ function company_dropdwn_change(row){
     row.find("TD").eq(2).find("select").append(comp_val.acc_ass_dropdwn)
     row.find("TD").eq(3).find("select").append(comp_val.acc_ass_val_dropdwn)
 }
+function acc_ass_cat_dropdwn(row,company_num){
+    acct_cat = row.find("TD").eq(2).find("select option:selected").val();
+    row.find("TD").eq(3).find("select").empty();
+    var acct_cat_val = account_assignment_cat(acct_cat,company_num)
+    row.find("TD").eq(3).find("select").append(acct_cat_val.acc_ass_val_dropdwn)
+}
 function get_acct_assmt_val(rowid){
     var row = $(rowid);
     var acct_cat = row.find("TD").eq(2).find("select option:selected").val();
     acct_cat = row[0].value;
     row[0].parentNode.nextElementSibling.childNodes[0].innerHTML = '';
-    var acct_cat_val = account_assignment_cat(acct_cat,company_num)
+    var acct_cat_val = account_assignment_cat(acct_cat.company_num)
     row[0].parentNode.nextElementSibling.childNodes[0].innerHTML = acct_cat_val.acc_ass_val_dropdwn;
 }
 
@@ -268,7 +275,7 @@ function read_popup_data() {
         var compare = aad.account_assign_value+'-'+aad.account_assign_cat+'-'+aad.company_id+'-'+ aad.language_id
         validate_add_attributes.push(compare);
         aad_data.push(aad);
-    }); 
+    });
     table_sort_filter('id_popup_table');
     return aad_data;
 }
@@ -302,7 +309,7 @@ function read_popup_data() {
         main_attribute.company_id = row.find("TD").eq(1).html()
         main_attribute.account_assign_cat = row.find("TD").eq(2).html()
         main_attribute.account_assign_value = row.find("TD").eq(3).html()
-        main_attribute.language_id = row.find("TD").eq(5).html
+        main_attribute.language_id = row.find("TD").eq(5).html()
         main_attribute.del_ind = row.find("TD").eq(7).find('input[type="checkbox"]').is(':checked');
         var compare_maintable = main_attribute.account_assign_value+'-'+main_attribute.account_assign_cat+'-'+main_attribute.company_id+'-'+main_attribute.language_id;
         main_table_low_value.push(compare_maintable);
