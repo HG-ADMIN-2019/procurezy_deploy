@@ -34,7 +34,7 @@ def index(request):
         'is_slide_menu': True,
         'is_configuration_active': True
     }
-    return render(request, 'eProc_Marketing/marketing.html', context)
+    return render(request, 'marketing.html', context)
 
 
 def send_whatsapp_message(phone_number, message, image_path, send_time):
