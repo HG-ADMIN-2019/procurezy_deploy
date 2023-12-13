@@ -10,7 +10,7 @@ from django.shortcuts import render
 import pywhatkit as kit
 from io import TextIOWrapper
 from io import StringIO
-import platform
+
 from django.views.decorators.csrf import csrf_exempt
 from flask.app import Flask
 
@@ -27,19 +27,14 @@ def index(request):
     return render(request, 'marketing.html', context)
 
 
-def check_display():
-    if platform.system() != 'Windows':
-        try:
-            display_value = os.environ['DISPLAY']
-            print(f"DISPLAY environment variable found: {display_value}")
-        except KeyError:
-            print("DISPLAY environment variable not found.")
+if os.name != 'nt':  # Check if the OS is not Windows
+    display_value = os.environ.get('DISPLAY')
+
+    if display_value:
+        # Your code that uses 'DISPLAY'
+        print(f"DISPLAY environment variable found: {display_value}")
     else:
-        print("Not a Unix-like system. Skipping DISPLAY check.")
-
-
-check_display()
-
+        print("DISPLAY environment variable not found.")
 
 def send_whatsapp_message(phone_number, message, image_path, send_time):
     try:
