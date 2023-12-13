@@ -15,19 +15,15 @@ from flask.app import Flask
 app = Flask(__name__)
 
 try:
-    import pywhatkit as kit
-
-    pywhatkit_available = True
+    if 'DISPLAY' in os.environ:
+        import pywhatkit as kit
+        pywhatkit_available = True
+    else:
+        print("No DISPLAY environment variable found. Skipping pywhatkit import.")
+        pywhatkit_available = False
 except ImportError:
     print("pywhatkit is not available. WhatsApp functionality will be disabled.")
     pywhatkit_available = False
-
-if 'DISPLAY' in os.environ:
-    try:
-        import pywhatkit as kit
-    except ImportError:
-        print("pywhatkit is not available. WhatsApp functionality will be disabled.")
-
 
 def index(request):
     context = {
@@ -37,7 +33,6 @@ def index(request):
         'is_configuration_active': True
     }
     return render(request, 'marketing.html', context)
-
 
 def send_whatsapp_message(phone_number, message, image_path, send_time):
     try:
@@ -65,7 +60,6 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
         print(f'Error sending message to {phone_number}: {str(e)}')
         import traceback
         traceback.print_exc()
-
 
 @csrf_exempt
 def send_message(request):
@@ -120,7 +114,6 @@ def send_message(request):
     except Exception as e:
         print(f'Error: {str(e)}')
         return JsonResponse({'result': f'Error: {str(e)}'})
-
 
 if __name__ == '__main__':
     app.run(debug=True)
