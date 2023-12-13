@@ -4,14 +4,15 @@ import os
 import re
 import datetime
 import time
+from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import render
 import pywhatkit as kit
 from io import TextIOWrapper
 from io import StringIO
 
-from django.http.response import JsonResponse
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from flask import Flask
+from flask.app import Flask
 
 app = Flask(__name__)
 
