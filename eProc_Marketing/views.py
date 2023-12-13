@@ -17,6 +17,7 @@ app = Flask(__name__)
 try:
     if 'DISPLAY' in os.environ:
         import pywhatkit as kit
+
         pywhatkit_available = True
     else:
         print("No DISPLAY environment variable found. Skipping pywhatkit import.")
@@ -25,6 +26,7 @@ except ImportError:
     print("pywhatkit is not available. WhatsApp functionality will be disabled.")
     pywhatkit_available = False
 
+
 def index(request):
     context = {
         'inc_nav': True,
@@ -32,7 +34,8 @@ def index(request):
         'is_slide_menu': True,
         'is_configuration_active': True
     }
-    return render(request, 'marketing.html', context)
+    return render(request, 'eProc_Marketing/marketing.html', context)
+
 
 def send_whatsapp_message(phone_number, message, image_path, send_time):
     try:
@@ -60,6 +63,7 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
         print(f'Error sending message to {phone_number}: {str(e)}')
         import traceback
         traceback.print_exc()
+
 
 @csrf_exempt
 def send_message(request):
@@ -114,6 +118,7 @@ def send_message(request):
     except Exception as e:
         print(f'Error: {str(e)}')
         return JsonResponse({'result': f'Error: {str(e)}'})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
