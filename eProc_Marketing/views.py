@@ -5,8 +5,7 @@ import re
 import datetime
 import time
 from django.conf import settings
-# from django.http import JsonResponse
-from django.http.response import JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 import pywhatkit as kit
 from io import TextIOWrapper
@@ -16,8 +15,9 @@ from django.views.decorators.csrf import csrf_exempt
 from flask.app import Flask
 
 app = Flask(__name__)
-import matplotlib
-matplotlib.use('Agg')  # Set the backend to a non-interactive one
+import pyautogui as pg
+
+pg.FAILSAFE = False
 
 
 def index(request):
@@ -61,6 +61,9 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
         print(f'Error sending message to {phone_number}: {str(e)}')
         import traceback
         traceback.print_exc()
+
+
+print(os.environ.get('DISPLAY', ''))
 
 
 @csrf_exempt
