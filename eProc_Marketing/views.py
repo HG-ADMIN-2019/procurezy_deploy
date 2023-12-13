@@ -15,6 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from flask.app import Flask
 
 app = Flask(__name__)
+import matplotlib
+matplotlib.use('Agg')  # Set the backend to a non-interactive one
 
 
 def index(request):
