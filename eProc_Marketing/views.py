@@ -13,11 +13,8 @@ from io import StringIO
 
 from django.views.decorators.csrf import csrf_exempt
 from flask.app import Flask
-from pyvirtualdisplay.display import Display
 
 app = Flask(__name__)
-
-_display = Display(os.environ['DISPLAY'])
 
 
 def index(request):
