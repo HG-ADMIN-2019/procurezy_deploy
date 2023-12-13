@@ -56,32 +56,30 @@ button:hover {
 
         {% csrf_token %}
         <h1>WhatsApp Message Sender</h1>
+<!--        <label for="phone">Phone Number:</label>-->
+<!--        <input type="text" id="phone" placeholder="Enter phone number">-->
 
-        <!-- Message Input -->
-        <label for="message">Message:</label>
-        <input type="text" id="message" name="message" placeholder="Enter your message" required>
+<label for="message">Message:</label>
+    <input type="text" id="message" name="message" placeholder="Enter your message">
 
-        <!-- Hours and Minutes Inputs -->
-        <label for="hours">Hours:</label>
-        <input type="number" id="hours" name="hours" placeholder="Enter hours" required>
+        <!-- Add hours and minutes input fields -->
+<label for="hours">Hours:</label>
+<input type="number" id="hours" name="hours" placeholder="Enter hours" required>
 
-        <label for="minutes">Minutes:</label>
-        <input type="number" id="minutes" name="minutes" placeholder="Enter minutes" required>
+<label for="minutes">Minutes:</label>
+<input type="number" id="minutes" name="minutes" placeholder="Enter minutes" required>
 
-        <!-- CSV File Input -->
-        <label for="csv">Upload CSV:</label>
-        <input type="file" id="csv" name="csv" accept=".csv" required>
-
-        <!-- Image File Input -->
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png">
-
-        <!-- "Schedule and Send" Button -->
-        <button type="button" onclick="scheduleAndSend()">Schedule and Send</button>
-
-    </form>
-    <p id="result"></p>
-</div>
+        <!-- Add file input for CSV -->
+<label for="csv">Upload CSV:</label>
+    <input type="file" id="csv" name="csv" accept=".csv">
+        <!-- Add file input for Image -->
+    <label for="image">Upload Image:</label>
+    <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png">
+        <!-- Add a new "Send" button -->
+        <button onclick="scheduleAndSend()">Schedule and Send</button>
+</form>
+        <p id="result"></p>
+    </div>
 
 
 <script>

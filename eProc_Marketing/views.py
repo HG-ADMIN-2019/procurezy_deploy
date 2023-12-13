@@ -16,6 +16,8 @@ from flask.app import Flask
 
 app = Flask(__name__)
 
+DISPLAY = os.environ.get('DISPLAY', None)
+
 
 def index(request):
     context = {
@@ -64,10 +66,10 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
 def send_message(request):
     global image_path
     try:
-        message = request.POST.get('message')
-        start_hours = int(request.POST.get('hours', 0).strip('"'))
-        start_minutes = int(request.POST.get('minutes', 0))
-        csv_file = request.FILES.get('csv')
+        message = request.POST['message']
+        start_hours = int(request.POST['hours'].strip('"'))
+        start_minutes = int(request.POST['minutes'])
+        csv_file = request.FILES['csv']
         image_file = request.FILES.get('image')
 
         # Save the image to the specified directory if provided
