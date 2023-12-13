@@ -5,7 +5,8 @@ import re
 import datetime
 import time
 from django.conf import settings
-from django.http import JsonResponse
+# from django.http import JsonResponse
+from django.http.response import JsonResponse
 from django.shortcuts import render
 import pywhatkit as kit
 from io import TextIOWrapper
