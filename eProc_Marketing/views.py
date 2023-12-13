@@ -4,28 +4,10 @@ import os
 import re
 import datetime
 import time
-from django.conf import settings
-from django.http import JsonResponse
-from django.shortcuts import render
+from flask import Flask, request, jsonify
 import pywhatkit as kit
-from io import TextIOWrapper
-from io import StringIO
-
-from django.views.decorators.csrf import csrf_exempt
-from flask.app import Flask
 
 app = Flask(__name__)
-
-
-def index(request):
-    context = {
-        'inc_nav': True,
-        'inc_footer': True,
-        'is_slide_menu': True,
-        'is_configuration_active': True
-    }
-    return render(request, 'marketing.html', context)
-
 
 def send_whatsapp_message(phone_number, message, image_path, send_time):
     try:
@@ -59,45 +41,47 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
         import traceback
         traceback.print_exc()
 
+@app.route('/')
+def index():
+    context = {
+        'inc_nav': True,
+        'inc_footer': True,
+        'is_slide_menu': True,
+        'is_configuration_active': True
+    }
+    return render_template('marketing.html', **context)
 
-@csrf_exempt
-def send_message(request):
+@app.route('/send_message', methods=['POST'])
+def send_message():
     global image_path
     try:
-        message = request.POST['message']
-        start_hours = int(request.POST['hours'].strip('"'))
-        start_minutes = int(request.POST['minutes'])
-        csv_file = request.FILES['csv']
-        image_file = request.FILES.get('image')
+        message = request.form['message']
+        start_hours = int(request.form['hours'].strip('"'))
+        start_minutes = int(request.form['minutes'])
+        csv_file = request.files['csv']
+        image_file = request.files.get('image')
 
         # Save the image to the specified directory if provided
         if image_file:
-            image_path = os.path.join(settings.MEDIA_ROOT, 'image.jpg')
-            with open(image_path, 'wb') as f:
-                for chunk in image_file.chunks():
-                    f.write(chunk)
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'image.jpg')
+            image_file.save(image_path)
 
         # Decode the content manually
         csv_content = csv_file.read().decode('utf-8', errors='replace')
 
         # Use StringIO to create a file-like object for csv.reader
-        from io import StringIO
-        text_csv_file = StringIO(csv_content)
+        text_csv_file = io.StringIO(csv_content)
 
         # Read phone numbers from the CSV file
         phone_numbers = []
-        with csv_file.open(mode='rb') as file:
-            csv_content = re.sub(rb'[^\x00-\x7F]+', b'', file.read())
-            text_csv_file = TextIOWrapper(io.BytesIO(csv_content), encoding='utf-8')
+        reader = csv.DictReader(text_csv_file)
+        for row in reader:
+            if 'phone_number' in row:
+                phone_number = row['phone_number']
+                if not phone_number.startswith('+'):
+                    phone_number = '+91' + phone_number
 
-            reader = csv.DictReader(text_csv_file)
-            for row in reader:
-                if 'phone_number' in row:
-                    phone_number = row['phone_number']
-                    if not phone_number.startswith('+'):
-                        phone_number = '+91' + phone_number
-
-                    phone_numbers.append(phone_number)
+                phone_numbers.append(phone_number)
 
         # Calculate the interval between each contact (adjust as needed)
         interval = datetime.timedelta(minutes=1)
@@ -123,10 +107,11 @@ def send_message(request):
             except Exception as e:
                 print(f'Error sending message to {phone_number}: {str(e)}')
 
-        return JsonResponse({'result': 'Messages sent successfully'})
+        return jsonify({'result': 'Messages sent successfully'})
     except Exception as e:
         print(f'Error: {str(e)}')
-        return JsonResponse({'result': f'Error: {str(e)}'})
+        return jsonify({'result': f'Error: {str(e)}'})
+
 
 
 if __name__ == '__main__':
