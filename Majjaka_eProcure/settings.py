@@ -12,10 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 # import django_heroku
 import os
-os.environ['DISPLAY'] = ':0'
-os.environ['XAUTHORITY']='/run/user/1000/gdm/Xauthority'
-import pyautogui
-print(pyautogui.position())
+
 # import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
