@@ -47,3 +47,10 @@ django-sass
 libsass
 opencv-python==4.2.0.32
 yagmail~=0.15.277
+pywhatkit~=5.4
+flask~=3.0.0
+requests~=2.28.1
+twilio~=7.14.0
+tabula~=1.0.5
+APScheduler~=3.9.1.post1
+pypdf~=3.8.0
