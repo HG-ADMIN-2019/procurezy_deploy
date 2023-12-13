@@ -7,13 +7,14 @@ import time
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
-# import pywhatkit as kit
-from io import TextIOWrapper
-from io import StringIO
-from django.views.decorators.csrf import csrf_exempt
-from flask.app import Flask
 if 'DISPLAY' in os.environ:
     import pywhatkit as kit
+from io import TextIOWrapper
+from io import StringIO
+
+from django.views.decorators.csrf import csrf_exempt
+from flask.app import Flask
+
 app = Flask(__name__)
 
 
