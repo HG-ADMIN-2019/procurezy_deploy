@@ -15,9 +15,6 @@ from django.views.decorators.csrf import csrf_exempt
 from flask.app import Flask
 
 app = Flask(__name__)
-import pyautogui as pg
-
-pg.FAILSAFE = False
 
 
 def index(request):
@@ -61,9 +58,6 @@ def send_whatsapp_message(phone_number, message, image_path, send_time):
         print(f'Error sending message to {phone_number}: {str(e)}')
         import traceback
         traceback.print_exc()
-
-
-print(os.environ.get('DISPLAY', ''))
 
 
 @csrf_exempt
