@@ -1,13 +1,17 @@
 import io
 import csv
 import os
+
+if 'DISPLAY' in os.environ:
+    import pywhatkit as kit
+
 import re
 import datetime
 import time
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
-import pywhatkit as kit
+# import pywhatkit as kit
 from io import TextIOWrapper
 from io import StringIO
 
@@ -26,15 +30,6 @@ def index(request):
     }
     return render(request, 'marketing.html', context)
 
-
-if os.name != 'nt':  # Check if the OS is not Windows
-    display_value = os.environ.get('DISPLAY')
-
-    if display_value:
-        # Your code that uses 'DISPLAY'
-        print(f"DISPLAY environment variable found: {display_value}")
-    else:
-        print("DISPLAY environment variable not found.")
 
 def send_whatsapp_message(phone_number, message, image_path, send_time):
     try:
