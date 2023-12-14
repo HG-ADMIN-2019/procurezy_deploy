@@ -3,85 +3,90 @@ import csv
 import os
 import re
 import datetime
-import time
-from flask import Flask, request, jsonify
+import time, keyboard
+from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import render
 import pywhatkit as kit
+from io import TextIOWrapper
+from io import StringIO
+
+from django.views.decorators.csrf import csrf_exempt
+from flask.app import Flask
 
 app = Flask(__name__)
 
-def send_whatsapp_message(phone_number, message, image_path, send_time):
-    try:
-        # Check if either message or image is missing
-        if not message and not image_path:
-            print("Both message and image are missing. Nothing to send.")
-            return
 
-        # Get the current time
-        now = datetime.datetime.now()
-
-        # Calculate the delay until the scheduled time
-        delay = (send_time - now).total_seconds()
-
-        # If the scheduled time is in the future, wait until it's time to send
-        if delay > 0:
-            print(f"Waiting for {delay} seconds until the scheduled send time.")
-            time.sleep(delay)
-
-        # Send the completed message (either text or image or both)
-        if message or image_path:
-            kit.sendwhats_image(phone_number, image_path, caption=message)
-
-            # Wait for a few seconds before moving on
-            time.sleep(5)
-
-            print(f"Message sent successfully to {phone_number}")
-
-    except Exception as e:
-        print(f'Error sending message to {phone_number}: {str(e)}')
-        import traceback
-        traceback.print_exc()
-
-@app.route('/')
-def index():
+def index(request):
     context = {
         'inc_nav': True,
         'inc_footer': True,
         'is_slide_menu': True,
         'is_configuration_active': True
     }
-    return render_template('marketing.html', **context)
+    return render(request, 'marketing.html', context)
 
-@app.route('/send_message', methods=['POST'])
-def send_message():
+
+def send_whatsapp_message(phone_number, message, send_time, image_path=None):
+    try:
+        # Check if either message or image is missing
+        if message and not image_path:
+            # If message is present but image is missing, add the missing image
+            image_path = 'path_to_default_image.jpg'  # Provide the path to a default image
+        elif not message and image_path:
+            # If image is present but message is missing, add the missing message
+            message = 'Default message'  # Provide a default message
+
+        # Send the completed message (either text or image or both)
+        if message or image_path:
+            # Use the kit.sendwhats function to send both text and image
+            kit.sendwhats(phone_number, message, send_time.hour, send_time.minute, image_path)
+
+            # Wait for a few seconds to ensure the message is sent
+            time.sleep(5)
+
+    except Exception as e:
+        print(f'Error sending message to {phone_number}: {str(e)}')
+
+
+@csrf_exempt
+def send_message(request):
     global image_path
     try:
-        message = request.form['message']
-        start_hours = int(request.form['hours'].strip('"'))
-        start_minutes = int(request.form['minutes'])
-        csv_file = request.files['csv']
-        image_file = request.files.get('image')
+        message = request.POST['message']
+        start_hours = int(request.POST['hours'].strip('"'))
+        start_minutes = int(request.POST['minutes'])
+        csv_file = request.FILES['csv']
+        image_file = request.FILES.get('image')
 
         # Save the image to the specified directory if provided
         if image_file:
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'image.jpg')
-            image_file.save(image_path)
+            image_path = os.path.join(settings.MEDIA_ROOT, 'image.jpg')
+            with open(image_path, 'wb') as f:
+                for chunk in image_file.chunks():
+                    f.write(chunk)
 
         # Decode the content manually
         csv_content = csv_file.read().decode('utf-8', errors='replace')
 
         # Use StringIO to create a file-like object for csv.reader
-        text_csv_file = io.StringIO(csv_content)
+        from io import StringIO
+        text_csv_file = StringIO(csv_content)
 
         # Read phone numbers from the CSV file
         phone_numbers = []
-        reader = csv.DictReader(text_csv_file)
-        for row in reader:
-            if 'phone_number' in row:
-                phone_number = row['phone_number']
-                if not phone_number.startswith('+'):
-                    phone_number = '+91' + phone_number
+        with csv_file.open(mode='rb') as file:
+            csv_content = re.sub(rb'[^\x00-\x7F]+', b'', file.read())
+            text_csv_file = TextIOWrapper(io.BytesIO(csv_content), encoding='utf-8')
 
-                phone_numbers.append(phone_number)
+            reader = csv.DictReader(text_csv_file)
+            for row in reader:
+                if 'phone_number' in row:
+                    phone_number = row['phone_number']
+                    if not phone_number.startswith('+'):
+                        phone_number = '+91' + phone_number
+
+                    phone_numbers.append(phone_number)
 
         # Calculate the interval between each contact (adjust as needed)
         interval = datetime.timedelta(minutes=1)
@@ -95,7 +100,8 @@ def send_message():
         for phone_number in phone_numbers:
             try:
                 # Send both text message and image at the same time
-                send_whatsapp_message(phone_number, message, image_path, send_time)
+                print(f'Sending message and image to {phone_number}')
+                send_whatsapp_message(phone_number, message, send_time, image_path)
 
                 # Increment send_time for the next contact
                 send_time += interval
@@ -107,10 +113,11 @@ def send_message():
             except Exception as e:
                 print(f'Error sending message to {phone_number}: {str(e)}')
 
-        return jsonify({'result': 'Messages sent successfully'})
+        return JsonResponse({'result': 'Messages sent successfully'})
     except Exception as e:
         print(f'Error: {str(e)}')
-        return jsonify({'result': f'Error: {str(e)}'})
+        return JsonResponse({'result': f'Error: {str(e)}'})
+
 
 
 
