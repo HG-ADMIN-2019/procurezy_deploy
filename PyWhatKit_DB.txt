@@ -475,3 +475,9 @@ Time: 22:2
 Phone Number: +917676010274
 Message: Hello this is a test message
 --------------------
+Date: 15/12/2023
+Time: 7:11
+Phone Number: +917676010274
+Image: D:\majjaka\procurezy_deploy\media\image.jpg
+Caption: Hello this is a test message
+--------------------
