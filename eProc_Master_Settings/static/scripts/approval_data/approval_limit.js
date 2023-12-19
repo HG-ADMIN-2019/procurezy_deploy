@@ -108,30 +108,36 @@ function display_basic_db_data() {
 //*****************************
 function delete_duplicate() {
     $('#id_popup_table').DataTable().destroy();
-    var approval_limit_code_check = new Array
-    var main_table_low_value = new Array
+    var alv_code_check = new Array
+     var main_table_low_value = new Array
     $("#id_popup_table TBODY TR").each(function() {
         var row = $(this);
 
-        //*************** reading data from the pop-up ***************
-        aapprover_username = row.find("TD").eq(2).find('input[type="text"]').val().toUpperCase();
+        //************* reading data from the pop-up *************
+        app_code_id = row.find("TD").eq(3).find("select option:selected").val();
         company_id = row.find("TD").eq(1).find("select option:selected").val();
-        app_code_id = row.find("TD").eq(3).find("select option:selected").val();  
-        app_guid = row.find("TD").eq(4).find('input[type="text"]').val().toUpperCase()
-        approval_limit_compare = approver_username +'-'+ company_id +'-'+ app_code_id 
-        if (approval_limit_code_check.includes(approval_limit_compare)) {
+        approver_username = row.find("TD").eq(2).find("select option:selected").val();
+        app_lim_dec_guid = row.find("TD").eq(4).find('input[type="text"]').val();
+        var alv_compare = approver_username +'-'+ company_id +'-'+ app_code_id
+       if (checked_box){
+                del_ind = '1'
+       }
+       else{
+                del_ind = '0'
+        if (alv_code_check.includes(alv_compare)) {
             $(row).remove();
         }
-        approval_limit_code_check.push(approval_limit_compare);
-        main_table_low_value = get_main_table_data_upload(); //Read data from main table
-        if (main_table_low_value.includes(approval_limit_compare)) {
+          alv_code_check.push(alv_compare);
+          main_table_low_value = get_main_table_data_upload(); //Read data from main table
+        if (main_table_low_value.includes(alv_compare)) {
             $(row).remove();
         }
-        main_table_low_value.push(approval_limit_compare);
-        })
-        table_sort_filter_popup_pagination('id_popup_table')
-        check_data()
-    }
+        main_table_low_value.push(alv_compare);
+       }
+    })
+    table_sort_filter_popup_pagination('id_popup_table')
+    check_data()
+}
 
 // Functtion to hide and display save related popups
 $('#save_id').click(function () {
@@ -207,12 +213,12 @@ function get_main_table_data_upload() {
     $("#display_basic_table TBODY TR").each(function() {
         var row = $(this);
         var main_attribute = {};
-        main_attribute.approver_username = row.find("TD").eq(2).html();
-        main_attribute.company_id = row.find("TD").eq(1).html();
         main_attribute.app_code_id = row.find("TD").eq(3).html();
-        main_attribute.del_ind = row.find("TD").eq(5).find('input[type="checkbox"]').is(':checked');
-        var approval_limit_compare_maintable = main_attribute.approver_username +'-'+main_attribute.company_id +'-'+ main_attribute.app_code_id+ '-'+ main_attribute.del_ind
-        main_table_low_value.push(approval_limit_compare_maintable);
+        main_attribute.company_id = row.find("TD").eq(1).html();
+        main_attribute.approver_username = row.find("TD").eq(2).html();
+        main_attribute.del_ind = row.find("TD").eq(7).find('input[type="checkbox"]').is(':checked');
+        var alv_compare_maintable = main_attribute.approver_username +'-'+ main_attribute.company_id +'-'+main_attribute.app_code_id
+        main_table_low_value.push(alv_compare_maintable);
     });
     table_sort_filter('display_basic_table');
     return main_table_low_value
